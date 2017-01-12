@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  status: MyString
+  message: MyText
+  job: one
+  employee: one
+
+two:
+  status: MyString
+  message: MyText
+  job: two
+  employee: two

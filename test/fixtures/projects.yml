@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  description: MyText
+  start_date: 1
+  end_date: 1
+  deadline: 1
+  reward_type: MyString
+  reward_money: 1
+  reward_other: MyString
+
+two:
+  title: MyString
+  description: MyText
+  start_date: 1
+  end_date: 1
+  deadline: 1
+  reward_type: MyString
+  reward_money: 1
+  reward_other: MyString

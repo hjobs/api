@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  description: MyText
+  deadline: 1
+  salary_type: MyString
+  salary_value: 1
+  salary_high: 1
+  salary_low: 1
+  salary_unit: MyString
+  position: MyString
+
+two:
+  title: MyString
+  description: MyText
+  deadline: 1
+  salary_type: MyString
+  salary_value: 1
+  salary_high: 1
+  salary_low: 1
+  salary_unit: MyString
+  position: MyString
