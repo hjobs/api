@@ -18,11 +18,28 @@ class OrgsController < ApplicationController
     @org = Org.new(org_params)
 
     if @org.save
-      render json: @org, status: :created, location: @org
+      @employer = Employer.new(employer_params)
+      @employer.org = @org
+      if @employer.save
+        render json: {employer: @employer, org: @org}, status: :created, location: @org
+      else
+        ender json: @employer.errors, status: :unprocessable_entity
+      end
     else
       render json: @org.errors, status: :unprocessable_entity
     end
   end
+
+  # # POST /orgs
+  # def create
+  #   @org = Org.new(org_params)
+
+  #   if @org.save
+  #     render json: @org, status: :created, location: @org
+  #   else
+  #     render json: @org.errors, status: :unprocessable_entity
+  #   end
+  # end
 
   # PATCH/PUT /orgs/1
   def update
@@ -47,5 +64,9 @@ class OrgsController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def org_params
       params.require(:org).permit(:name, :description, :country, :region, :address, :logo)
+    end
+
+    def employer_params
+      params.require(:org).permit(:email, :password, :name, :description)
     end
 end
