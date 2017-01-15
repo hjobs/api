@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161228070033) do
+ActiveRecord::Schema.define(version: 20170115083501) do
 
   create_table "employee_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "status"
@@ -36,22 +36,22 @@ ActiveRecord::Schema.define(version: 20161228070033) do
 
   create_table "employees", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "email"
-    t.string   "password"
+    t.string   "password_digest"
     t.string   "name"
     t.string   "description"
     t.string   "country"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
   create_table "employers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "email"
-    t.string   "password"
+    t.string   "password_digest"
     t.string   "name"
     t.string   "description"
     t.integer  "org_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
     t.index ["org_id"], name: "index_employers_on_org_id", using: :btree
   end
 
