@@ -51,4 +51,4 @@ production:
   <<: *default
   database: HJobs_production
   username: hjobs
-  password: hjobs
+  password: <%= ENV['HJOBSDBPASSWORD'] %>
