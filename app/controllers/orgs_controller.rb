@@ -21,7 +21,14 @@ class OrgsController < ApplicationController
       @employer = Employer.new(employer_params)
       @employer.org = @org
       if @employer.save
-        render json: {employer: @employer, org: @org}, status: :created, location: @org
+        @command = AuthenticateUser.call('employer', params[:email], params[:password])
+        if @command.success?
+          render json: {employer: @employer, org: @org, auth_token: @command.result }, status: :created, location: @org
+        else
+          @org.destroy
+          @employer.destroy
+          render json: { error: @command.errors }, status: :unauthorized
+        end
       else
         ender json: @employer.errors, status: :unprocessable_entity
       end
@@ -67,6 +74,6 @@ class OrgsController < ApplicationController
     end
 
     def employer_params
-      params.require(:org).permit(:email, :password, :name, :description)
+      params.require(:org).permit(:email, :password, :description)
     end
 end
