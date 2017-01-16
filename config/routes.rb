@@ -12,5 +12,5 @@ Rails.application.routes.draw do
   scope '/:iam' do
     match '/authenticate' => 'authentication#authenticate', via: :post
   end
-  match '/orgs/:id/allPostings' => 'orgs#show_postings', via: :get
+  match '/orgs/:id/getPostings' => 'orgs#show_postings', via: :get
 end
