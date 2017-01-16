@@ -1,5 +1,5 @@
 class OrgsController < ApplicationController
-  before_action :set_org, only: [:show, :update, :destroy]
+  before_action :set_org, only: [:show, :update, :destroy, :show_postings]
 
   # GET /orgs
   def index
@@ -8,9 +8,15 @@ class OrgsController < ApplicationController
     render json: @orgs
   end
 
+  
+
   # GET /orgs/1
   def show
     render json: @org
+  end
+
+  def show_postings
+    render json: {org: @org, jobs: @org.jobs, projects: @org.projects}
   end
 
   # POST /orgs
