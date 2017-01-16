@@ -8,6 +8,9 @@ class AuthenticateUser < AuthenticationController
   end
 
   def call
+    logger.debug @iam
+    logger.debug @email
+    logger.debug @password
 		logger.debug ['inside authenticateuser.call, @iam is ' + @iam + ", @email = " + @email + ", @password = " + @password]
 		if @iam == 'employee'
     	JsonWebToken.encode(employee_id: employee.id) if employee

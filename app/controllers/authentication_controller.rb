@@ -10,7 +10,7 @@ class AuthenticationController < ApplicationController
       if params[:iam] == 'employee'
         @employee = Employee.find_by(email: params[:email])
         render json: { employee: @employee, auth_token: @command.result}, status: :created, location: @employee
-      elsif params[:iam] == 'helper'
+      elsif params[:iam] == 'employer'
         @employer = Employer.find_by email: params[:email]
         render json: { employer: @employer, auth_token: @command.result}, status: :created, location: @employer
       end
