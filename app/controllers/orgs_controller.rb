@@ -21,7 +21,7 @@ class OrgsController < ApplicationController
       @employer = Employer.new(employer_params)
       @employer.org = @org
       if @employer.save
-        @command = AuthenticateUser.call('employer', params[:email], params[:password])
+        @command = AuthenticateUser.call('employer', params.require(:org).permit(:email), params.require(:org).permit(:password))
         if @command.success?
           render json: {employer: @employer, org: @org, auth_token: @command.result }, status: :created, location: @org
         else
