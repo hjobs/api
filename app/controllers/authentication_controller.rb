@@ -1,6 +1,20 @@
 class AuthenticationController < ApplicationController
   # skip_before_action :authenticate_request
 
+  def return_user
+    @iam = params[:iam]
+    @current_user = AuthorizeApiRequest.call(request.headers,@iam).result
+    if @current_user
+      if @iam = 'employer'
+        render json: { employer: @current_user, org: @current_user.org, jobs: @current_user.org.jobs, projects: @current_user.org.projects }
+      else
+        render json: { employee: @current_user, jobs: @current_user.jobs, projects: @current_user.projects }
+      end
+    else
+      render json: { error: 'Not Authorized' }, status: 401
+    end
+  end
+
   def authenticate
     logger.debug ['params[:iam]',params[:iam]]
     @command = AuthenticateUser.call(params[:iam], params[:email], params[:password])

@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   scope '/:iam' do
     match '/authenticate' => 'authentication#authenticate', via: :post
+    get '/returnUser' => 'authentication#return_user'
   end
   match '/orgs/:id/getPostings' => 'orgs#show_postings', via: :get
 end
