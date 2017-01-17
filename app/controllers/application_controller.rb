@@ -1,9 +1,11 @@
 class ApplicationController < ActionController::API
   # before_action :authenticate_request, :set_global_variables
+  before_action :set_global_variables
   attr_reader :current_user
 
   def set_global_variables
     # @variable = "value"
+    @authToken = request.headers
   end
 
   private

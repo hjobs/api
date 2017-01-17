@@ -22,9 +22,9 @@ class AuthorizeApiRequest < AuthenticationController
     # logger.debug 'decoded_auth_token[:helper_id]'
     if decoded_auth_token
       if @iam == 'employee'
-        @user ||= User.find(decoded_auth_token[:user_id]) if decoded_auth_token["employee_id"]
+        @user ||= User.find(decoded_auth_token[:employee_id]) if decoded_auth_token["employee_id"]
       elsif @iam == 'employer'
-        @user ||= Helper.find(decoded_auth_token[:helper_id]) if decoded_auth_token["employer_id"]
+        @user ||= Helper.find(decoded_auth_token[:employer_id]) if decoded_auth_token["employer_id"]
       else
         @user || errors.add(:iam, 'Invalid user type') && nil
       end

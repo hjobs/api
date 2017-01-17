@@ -2,12 +2,6 @@ class AuthenticationController < ApplicationController
   # skip_before_action :authenticate_request
 
   def return_user
-    @iam = params[:iam]
-    logger.debug "request headers"
-    request.headers.each do |header|
-      logger.debug header
-    end
-    @current_user = AuthorizeApiRequest.call(request.headers,@iam).result
     if @current_user
       if @iam = 'employer'
         render json: { employer: @current_user, org: @current_user.org, jobs: @current_user.org.jobs, projects: @current_user.org.projects }
