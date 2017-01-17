@@ -13,9 +13,9 @@ class AuthenticateUser < AuthenticationController
     logger.debug @password
 		logger.debug ['inside authenticateuser.call, @iam is ' + @iam + ", @email = " + @email + ", @password = " + @password]
 		if @iam == 'employee'
-    	JsonWebToken.encode(employee_id: employee.id) if employee
+      JsonWebToken.encode(employee_id: employee.id) if employee
 		elsif @iam == 'employer'
-			JsonWebToken.encode(employer_id: employer.id) if employer
+      JsonWebToken.encode(employer_id: employer.id) if employer
 		end
   end
 

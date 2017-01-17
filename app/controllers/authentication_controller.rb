@@ -1,9 +1,9 @@
 class AuthenticationController < ApplicationController
-  skip_before_action :authenticate_request, except: [:return_user]
+  skip_before_action :authenticate_request, only: [:authenticate]
 
   def return_user
     if @current_user
-      if @iam = 'employer'
+      if @iam == 'employer'
         render json: { employer: @current_user, org: @current_user.org, jobs: @current_user.org.jobs, projects: @current_user.org.projects }
       else
         render json: { employee: @current_user, jobs: @current_user.jobs, projects: @current_user.projects }
@@ -19,12 +19,13 @@ class AuthenticationController < ApplicationController
 
     if @command.success?
       logger.debug "inside @command.success?, @command.reult/auth_token = " + @command.result
+      logger.debug Employer.find_by email: params[:email]
       if params[:iam] == 'employee'
         @employee = Employee.find_by(email: params[:email])
-        render json: { employee: @employee, auth_token: @command.result}, status: :created, location: @employee
+        render json: { employee: @employee, auth_token: @command.result}, status: :created
       elsif params[:iam] == 'employer'
         @employer = Employer.find_by email: params[:email]
-        render json: { employer: @employer, org: @employer.org, auth_token: @command.result}, status: :created, location: @employer
+        render json: { employer: @employer, org: @employer.org, auth_token: @command.result}, status: :created
       end
 
     else

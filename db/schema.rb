@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170115083501) do
+ActiveRecord::Schema.define(version: 20170117162041) do
 
   create_table "employee_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "status"
@@ -57,7 +57,7 @@ ActiveRecord::Schema.define(version: 20170115083501) do
 
   create_table "jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "title"
-    t.text     "description",  limit: 65535
+    t.text     "description",    limit: 65535
     t.integer  "deadline"
     t.string   "salary_type"
     t.integer  "salary_value"
@@ -65,8 +65,9 @@ ActiveRecord::Schema.define(version: 20170115083501) do
     t.integer  "salary_low"
     t.string   "salary_unit"
     t.string   "position"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.string   "attachment_url"
   end
 
   create_table "org_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -100,15 +101,16 @@ ActiveRecord::Schema.define(version: 20170115083501) do
 
   create_table "projects", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "title"
-    t.text     "description",  limit: 65535
-    t.integer  "start_date"
-    t.integer  "end_date"
+    t.text     "description",    limit: 65535
+    t.string   "start_date"
+    t.string   "end_date"
     t.integer  "deadline"
     t.string   "reward_type"
     t.integer  "reward_money"
     t.string   "reward_other"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.string   "attachment_url"
   end
 
   add_foreign_key "employee_jobs", "employees"
