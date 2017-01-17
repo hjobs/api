@@ -16,15 +16,11 @@ class AuthorizeApiRequest < AuthenticationController
   attr_reader :headers
 
   def user
-		# logger.debug ["inside authorize_api_request.rb --> user"]
-		# logger.debug ['Helper.find(decoded_auth_token[:helper_id])',Helper.find(decoded_auth_token[:helper_id])]
-		# logger.debug ["decoded_auth_token",decoded_auth_token]
-    # logger.debug 'decoded_auth_token[:helper_id]'
     if decoded_auth_token
       if @iam == 'employee'
-        @user ||= User.find(decoded_auth_token[:employee_id]) if decoded_auth_token["employee_id"]
+        @user ||= Employee.find(decoded_auth_token[:employee_id]) if decoded_auth_token["employee_id"]
       elsif @iam == 'employer'
-        @user ||= Helper.find(decoded_auth_token[:employer_id]) if decoded_auth_token["employer_id"]
+        @user ||= Employer.find(decoded_auth_token[:employer_id]) if decoded_auth_token["employer_id"]
       else
         @user || errors.add(:iam, 'Invalid user type') && nil
       end
@@ -37,6 +33,8 @@ class AuthorizeApiRequest < AuthenticationController
   end
 
   def http_auth_header
+    logger.debug 'authroisation loggin at authroize api request'
+    logger.debug headers['Authorization']
     if headers['Authorization'].present?
       return headers['Authorization'].split(' ').last
     else
