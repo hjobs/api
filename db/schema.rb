@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170117162041) do
+ActiveRecord::Schema.define(version: 20170119155320) do
 
   create_table "employee_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "status"
@@ -58,7 +58,7 @@ ActiveRecord::Schema.define(version: 20170117162041) do
   create_table "jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "title"
     t.text     "description",    limit: 65535
-    t.integer  "deadline"
+    t.datetime "deadline"
     t.string   "salary_type"
     t.integer  "salary_value"
     t.integer  "salary_high"
@@ -104,7 +104,7 @@ ActiveRecord::Schema.define(version: 20170117162041) do
     t.text     "description",    limit: 65535
     t.string   "start_date"
     t.string   "end_date"
-    t.integer  "deadline"
+    t.datetime "deadline"
     t.string   "reward_type"
     t.integer  "reward_money"
     t.string   "reward_other"
