@@ -19,10 +19,13 @@ class JobsController < ApplicationController
     @job = Job.new(job_params)
 
     if @job.save
-      @oj = OrgJob.new(org_job_params)
+      @oj = OrgJob.new()
+      logger.debug 'log current_user'
+      logger.debug @current_user.email
+      @oj.org = @current_user.org
       @oj.job = @job
       if @oj.save
-        render json: @job, status: :created, location: @job
+        render json: @job, status: :created
       else
         @job.destroy
         render json: @oj.errors, status: :unprocessable_entity
@@ -54,10 +57,10 @@ class JobsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def job_params
-      params.require(:job).permit(:title, :description, :deadline, :salary_type, :salary_value, :salary_high, :salary_low, :salary_unit, :position)
+      params.require(:job).permit(:title, :description, :deadline, :salary_type, :salary_value, :salary_high, :salary_low, :salary_unit, :position, :attachment_url)
     end
 
     def org_job_params
-       params.require(:response).permit(:org_id)
+       params.require(:job).permit(:org_id)
     end
 end

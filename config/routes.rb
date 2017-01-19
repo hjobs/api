@@ -4,15 +4,15 @@ Rails.application.routes.draw do
   scope '/:iam' do
     match '/authenticate' => 'authentication#authenticate', via: :post
     get '/orgs/showPostings' => 'orgs#show_postings'
-    # resources :employee_projects
-    # resources :employee_jobs
-    # resources :org_projects
-    # resources :org_jobs
-    # resources :projects
-    # resources :jobs
-    # resources :employers
-    # resources :orgs
-    # resources :employees
+    resources :employee_projects
+    resources :employee_jobs
+    resources :org_projects
+    resources :org_jobs
+    resources :projects
+    resources :jobs
+    resources :employers
+    resources :orgs
+    resources :employees
   end
   
 end
