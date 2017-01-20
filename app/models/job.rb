@@ -3,4 +3,5 @@ class Job < ApplicationRecord
   has_one :org, through: :org_job
   has_many :employee_jobs
   has_many :employees, through: :employee_jobs
+  has_many: job_employment_type
 end

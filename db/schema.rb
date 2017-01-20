@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170119155320) do
+ActiveRecord::Schema.define(version: 20170119235029) do
 
   create_table "employee_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "status"
@@ -55,9 +55,15 @@ ActiveRecord::Schema.define(version: 20170119155320) do
     t.index ["org_id"], name: "index_employers_on_org_id", using: :btree
   end
 
+  create_table "employment_types", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "title"
-    t.text     "description",    limit: 65535
+    t.text     "description",        limit: 65535
     t.datetime "deadline"
     t.string   "salary_type"
     t.integer  "salary_value"
@@ -65,9 +71,11 @@ ActiveRecord::Schema.define(version: 20170119155320) do
     t.integer  "salary_low"
     t.string   "salary_unit"
     t.string   "position"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.string   "attachment_url"
+    t.integer  "employment_type_id"
+    t.index ["employment_type_id"], name: "index_jobs_on_employment_type_id", using: :btree
   end
 
   create_table "org_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -118,6 +126,7 @@ ActiveRecord::Schema.define(version: 20170119155320) do
   add_foreign_key "employee_projects", "employees"
   add_foreign_key "employee_projects", "projects"
   add_foreign_key "employers", "orgs"
+  add_foreign_key "jobs", "employment_types"
   add_foreign_key "org_jobs", "jobs"
   add_foreign_key "org_jobs", "orgs"
   add_foreign_key "org_projects", "orgs"

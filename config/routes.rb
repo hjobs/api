@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   
+  resources :employment_types
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   scope '/:iam' do
     match '/authenticate' => 'authentication#authenticate', via: :post
