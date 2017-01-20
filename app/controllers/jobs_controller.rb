@@ -19,16 +19,23 @@ class JobsController < ApplicationController
     @job = Job.new(job_params)
 
     if @job.save
+
       @oj = OrgJob.new()
       logger.debug 'log current_user'
       logger.debug @current_user.email
       @oj.org = @current_user.org
       @oj.job = @job
+
+      unless add_employment_types
+        @job.destroy
+        return
+      end
+
       if @oj.save
         render json: @job, status: :created
       else
         @job.destroy
-        render json: @oj.errors, status: :unprocessable_entity
+        render json: @oj.errors || @job_employment_type.errors, status: :unprocessable_entity
       end
     else
       render json: @job.errors, status: :unprocessable_entity
@@ -57,7 +64,25 @@ class JobsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def job_params
-      params.require(:job).permit(:title, :description, :deadline, :salary_type, :salary_value, :salary_high, :salary_low, :salary_unit, :position, :attachment_url, :employment_type)
+      params.require(:job).permit(:title, :description, :deadline, :salary_type, :salary_value, :salary_high, :salary_low, :salary_unit, :position, :attachment_url, :employment_types)
+    end
+
+    def add_employment_types
+      params[:job][:employment_types] ||= []
+      params[:job][:employment_types].each do |employment_type|
+        logger.debug employment_type
+			  @e_type = EmploymentType.find_by(name: employment_type)
+        logger.debug "@e_type.name"
+        logger.debug @e_type.name
+        @j_e_t = JobEmploymentType.new()
+        @j_e_t.job = @job
+        @j_e_t.employment_type = @e_type
+        unless @j_e_t.save
+          render json: @j_e_t.errors, status: :unprocessable_entity
+          return false
+        end
+			end
+      return true
     end
 
     def org_job_params
