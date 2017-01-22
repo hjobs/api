@@ -1,12 +1,21 @@
 class JobsController < ApplicationController
-  skip_before_action :authenticate_request, only: [:index, :show, :index]
+  skip_before_action :authenticate_request, only: [:index, :show, :index, :show_job_type]
   before_action :set_job, only: [:show, :update, :destroy]
 
   # GET /jobs
   def index
     @jobs = Job.all
+    render json: @jobs.sort_by {|x| x.updated_at}.reverse, :include => [:employment_types, {:org => {:include => [:employers]}}]
+  end
 
-    render json: @jobs
+  def show_job_type
+    job_type_id = Job.job_types[params[:job_type]]
+    # logger.debug "job_type_id = "
+    # logger.debug job_type_id
+    @jobs = Job.where({job_type: job_type_id})
+    # logger.debug "job_type = "
+    # logger.debug params[:job_type]
+    render json: @jobs.sort_by {|x| x.updated_at}.reverse, :include => [:employment_types, {:org => {:include => [:employers]}}]
   end
 
   # GET /jobs/1
@@ -54,6 +63,8 @@ class JobsController < ApplicationController
   # DELETE /jobs/1
   def destroy
     @job.destroy
+    jobs = @current_user.org.jobs.sort_by {|x| x.updated_at}.reverse
+    render json: {jobs: jobs}
   end
 
   private
@@ -64,10 +75,11 @@ class JobsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def job_params
-      params.require(:job).permit(:title, :description, :deadline, :salary_type, :salary_value, :salary_high, :salary_low, :salary_unit, :position, :attachment_url, :employment_types)
+      params.require(:job).permit(:title, :description, :deadline, :salary_type, :salary_value, :salary_high, :salary_low, :salary_unit, :position, :attachment_url, :employment_types, :job_type)
     end
 
     def add_employment_types
+      logger.debug "inside add_employment_types"
       params[:job][:employment_types] ||= []
       params[:job][:employment_types].each do |employment_type|
         logger.debug employment_type
