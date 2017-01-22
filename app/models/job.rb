@@ -1,4 +1,6 @@
 class Job < ApplicationRecord
+  enum job_type: [:casual, :stable]
+  
   has_one :org_job, :dependent => :destroy
   has_one :org, through: :org_job
   has_many :employee_jobs

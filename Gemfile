@@ -10,10 +10,12 @@ end
 gem 'rails', '~> 5.0.1'
 # Use mysql as the database for Active Record
 gem 'mysql2', '>= 0.3.18', '< 0.5'
-# active model serializers
-gem 'active_model_serializers', '~> 0.10.0.rc2'
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
+# Use ActiveModel has_secure_password
+gem 'bcrypt', '~> 3.1.7'
+# active model serializers
+gem 'active_model_serializers', '~> 0.10.0.rc2'
 gem 'jwt'
 gem 'simple_command'
 gem 'rest-client'
@@ -21,8 +23,7 @@ gem 'rest-client'
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
-# Use ActiveModel has_secure_password
-gem 'bcrypt', '~> 3.1.7'
+
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

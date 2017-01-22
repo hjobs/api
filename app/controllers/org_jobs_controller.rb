@@ -1,4 +1,5 @@
 class OrgJobsController < ApplicationController
+  skip_before_action :authenticate_request
   before_action :set_org_job, only: [:show, :update, :destroy]
 
   # GET /org_jobs

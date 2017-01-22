@@ -1,12 +1,12 @@
 class OrgsController < ApplicationController
-  skip_before_action :authenticate_request, only: [:create]
+  skip_before_action :authenticate_request, only: [:show, :create]
   before_action :set_org, only: [:show, :update, :destroy]
 
   # GET /orgs
   def index
     @orgs = Org.all
 
-    render json: @orgs
+    render json: @orgs, :include => [:jobs]
   end
 
   # GET /orgs/1
@@ -16,12 +16,25 @@ class OrgsController < ApplicationController
 
   def show_postings
     @org = Org.find(@current_user.org.id)
-    render json: {employer: @current_user, org: @org, jobs: @org.jobs, projects: @org.projects}
+    jobs = @org.jobs.sort_by {|x| x.updated_at}.reverse
+    projects = @org.projects.sort_by {|x| x.updated_at}.reverse
+    # render json: {employer: @current_user}
+    # render json: {org: @org}
+    # render json: {jobs: jobs}, :include => [:employment_types]
+    # render json: {projects: projects}
+    # render json: {employer: @current_user, org: @org, jobs: {jobs => {:include => [:employment_types]}}, projects: projects }
+    render :json => {
+      :employer => @current_user.as_json,
+      :org => @org.as_json,
+      :jobs => jobs.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}} ]) },
+      :projects => projects
+    }
   end
 
   # POST /orgs
   def create
     @org = Org.new(org_params)
+    @org.logo.sub! '?dl=0', '?raw=1'
 
     if @org.save
       @employer = Employer.new(employer_params)
@@ -29,7 +42,7 @@ class OrgsController < ApplicationController
       if @employer.save
         @command = AuthenticateUser.call('employer', @employer.email, @employer.password)
         if @command.success?
-          render json: {employer: @employer, org: @org, auth_token: @command.result }, status: :created, location: @org
+          render json: {employer: @employer, org: @org, auth_token: @command.result }, status: :created
         else
           @org.destroy
           @employer.destroy
