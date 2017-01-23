@@ -16,7 +16,8 @@ class OrgsController < ApplicationController
 
   def show_postings
     @org = Org.find(@current_user.org.id)
-    jobs = @org.jobs.sort_by {|x| x.updated_at}.reverse
+    casual_jobs = @org.jobs.where({ job_type: "casual"}).sort_by {|x| x.updated_at}.reverse
+    stable_jobs = @org.jobs.where({ job_type: "stable"}).sort_by {|x| x.updated_at}.reverse
     projects = @org.projects.sort_by {|x| x.updated_at}.reverse
     # render json: {employer: @current_user}
     # render json: {org: @org}
@@ -26,7 +27,8 @@ class OrgsController < ApplicationController
     render :json => {
       :employer => @current_user.as_json,
       :org => @org.as_json,
-      :jobs => jobs.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}} ]) },
+      :casual_jobs => casual_jobs.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}} ]) },
+      :stable_jobs => stable_jobs.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}} ]) },
       :projects => projects
     }
   end
@@ -49,7 +51,7 @@ class OrgsController < ApplicationController
           render json: { error: @command.errors }, status: :unauthorized
         end
       else
-        ender json: @employer.errors, status: :unprocessable_entity
+        render json: @employer.errors, status: :unprocessable_entity
       end
     else
       render json: @org.errors, status: :unprocessable_entity

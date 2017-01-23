@@ -19,7 +19,19 @@ class ProjectsController < ApplicationController
     @project = Project.new(project_params)
 
     if @project.save
-      render json: @project, status: :created, location: @project
+
+      @op = OrgProject.new()
+      logger.debug 'log current_user'
+      logger.debug @current_user.email
+      @op.org = @current_user.org
+      @op.project = @project
+
+      if @op.save
+        render json: @project, status: :created
+      else
+        @project.destroy
+        render json: @op.errors, status: :unprocessable_entity
+      end
     else
       render json: @project.errors, status: :unprocessable_entity
     end
@@ -37,6 +49,8 @@ class ProjectsController < ApplicationController
   # DELETE /projects/1
   def destroy
     @project.destroy
+    projects = @current_user.org.projects.sort_by {|x| x.updated_at}.reverse
+    render json: {projects: projects}
   end
 
   private
