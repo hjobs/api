@@ -95,6 +95,6 @@ class OrgsController < ApplicationController
     end
 
     def employer_params
-      params.require(:org).permit(:email, :password, :description)
+      params.require(:org).permit(:email, :password)
     end
 end
