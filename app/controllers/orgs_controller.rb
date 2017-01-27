@@ -91,7 +91,7 @@ class OrgsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def org_params
-      params.require(:org).permit(:name, :description, :country, :region, :address, :logo)
+      params.require(:org).permit(:name, :description, :country, :region, :address, :logo, :email)
     end
 
     def employer_params
