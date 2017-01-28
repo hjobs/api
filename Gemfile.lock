@@ -49,6 +49,7 @@ GEM
     byebug (9.0.6)
     case_transform (0.2)
       activesupport
+    choice (0.2.0)
     concurrent-ruby (1.0.4)
     domain_name (0.5.20161129)
       unf (>= 0.0.5, < 1.0.0)
@@ -103,6 +104,11 @@ GEM
     rails-dom-testing (2.0.2)
       activesupport (>= 4.2.0, < 6.0)
       nokogiri (~> 1.6)
+    rails-erd (1.5.0)
+      activerecord (>= 3.2)
+      activesupport (>= 3.2)
+      choice (~> 0.2.0)
+      ruby-graphviz (~> 1.2)
     rails-html-sanitizer (1.0.3)
       loofah (~> 2.0)
     railties (5.0.1)
@@ -119,6 +125,7 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
+    ruby-graphviz (1.2.2)
     simple_command (0.0.9)
     spring (2.0.0)
       activesupport (>= 4.2)
@@ -156,6 +163,7 @@ DEPENDENCIES
   puma (~> 3.0)
   rack-cors
   rails (~> 5.0.1)
+  rails-erd
   rest-client
   simple_command
   spring
