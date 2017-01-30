@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   scope '/:iam' do
     match '/authenticate' => 'authentication#authenticate', via: :post
     get '/orgs/showPostings' => 'orgs#show_postings'
+    get '/orgs/whoAreWe' => 'orgs#who_are_we'
     get '/jobs/job_type/:job_type' => 'jobs#show_job_type'
     resources :employee_projects
     resources :employee_jobs
