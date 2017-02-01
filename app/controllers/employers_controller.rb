@@ -19,7 +19,7 @@ class EmployersController < ApplicationController
     @employer = Employer.new(employer_params)
 
     if @employer.save
-      render json: @employer, status: :created, location: @employer
+      render json: @employer, status: :created
     else
       render json: @employer.errors, status: :unprocessable_entity
     end
@@ -47,6 +47,6 @@ class EmployersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def employer_params
-      params.require(:employer).permit(:email, :password, :name, :description, :org_id)
+      params.require(:employer).permit(:email, :password, :name, :admin, :description, :org_id)
     end
 end
