@@ -50,16 +50,19 @@ class OrgsController < ApplicationController
     if @org.save
       @employer = Employer.new(employer_params)
       @employer.org = @org
-      if @employer.save
+      @org.email = @employer.email
+      @org.save
+      if @employer.save && @org.save
         @command = AuthenticateUser.call('employer', @employer.email, @employer.password)
         if @command.success?
           render json: {employer: @employer, org: @org, auth_token: @command.result }, status: :created
         else
-          @org.destroy
           @employer.destroy
+          @org.destroy
           render json: { error: @command.errors }, status: :unauthorized
         end
       else
+        @org.destroy
         render json: @employer.errors, status: :unprocessable_entity
       end
     else
