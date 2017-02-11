@@ -51,7 +51,6 @@ class OrgsController < ApplicationController
       @employer = Employer.new(employer_params)
       @employer.org = @org
       @org.email = @employer.email
-      @org.save
       if @employer.save && @org.save
         @command = AuthenticateUser.call('employer', @employer.email, @employer.password)
         if @command.success?
