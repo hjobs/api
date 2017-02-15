@@ -1,4 +1,5 @@
 require 'test_helper'
+require_relative 'authentication_controller_test'
 
 class JobsControllerTest < ActionDispatch::IntegrationTest
   setup do
@@ -6,13 +7,13 @@ class JobsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get index" do
-    get jobs_url, as: :json
+    get '/employers/jobs', as: :json, headers: {Authorization: @employer_token}
     assert_response :success
   end
 
   test "should create job" do
     assert_difference('Job.count') do
-      post jobs_url, params: { job: { deadline: @job.deadline, description: @job.description, position: @job.position, salary_high: @job.salary_high, salary_low: @job.salary_low, salary_type: @job.salary_type, salary_unit: @job.salary_unit, salary_value: @job.salary_value, title: @job.title } }, as: :json
+      post '/employers/jobs', headers: { Authorization: @employer_token }, params: { job: { deadline: @job.deadline, description: @job.description, position: @job.position, salary_high: @job.salary_high, salary_low: @job.salary_low, salary_type: @job.salary_type, salary_unit: @job.salary_unit, salary_value: @job.salary_value, title: @job.title } }, as: :json
     end
 
     assert_response 201

@@ -17,7 +17,8 @@ class EmployersController < ApplicationController
   # POST /employers
   def create
     @employer = Employer.new(employer_params)
-
+    logger.debug @employer
+    logger.debug @employer.org.id
     if @employer.save
       render json: @employer, status: :created
     else
@@ -42,7 +43,11 @@ class EmployersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_employer
-      @employer = Employer.find(params[:id])
+      if params[:id]
+        @employer = Employer.find(params[:id])
+      elsif params[:email]
+        @employers = Employer.find_by(:email => params[:email])
+      end
     end
 
     # Only allow a trusted parameter "white list" through.

@@ -1,17 +1,19 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
+  name: asdf
   description: MyText
   country: MyString
   region: MyString
   address: MyText
   logo: MyString
+  email: asdf
 
 two:
-  name: MyString
+  name: qwer
   description: MyText
   country: MyString
   region: MyString
   address: MyText
   logo: MyString
+  email: qwer

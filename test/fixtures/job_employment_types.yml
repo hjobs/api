@@ -2,8 +2,8 @@
 
 one:
   job: one
-  employment_type: one
+  employment_type: casual
 
 two:
   job: two
-  employment_type: two
+  employment_type: casual
