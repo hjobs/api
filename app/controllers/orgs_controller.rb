@@ -49,6 +49,7 @@ class OrgsController < ApplicationController
 
     if @org.save
       @employer = Employer.new(employer_params)
+      @employer.admin = true
       @employer.org = @org
       @org.email = @employer.email
       if @employer.save && @org.save
