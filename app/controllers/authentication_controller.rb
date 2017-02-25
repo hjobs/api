@@ -4,9 +4,9 @@ class AuthenticationController < ApplicationController
   def return_user
     if @current_user
       if @iam == 'employer'
-        render json: { employer: @current_user, org: @current_user.org, jobs: @current_user.org.jobs.sort_by{|x| x.created_at}.reverse, projects: @current_user.org.projects }
+        render json: { employer: @current_user, org: @current_user.org, jobs: @current_user.org.jobs.sort_by{|x| x.created_at}.reverse}
       else
-        render json: { employee: @current_user, jobs: @current_user.jobs, projects: @current_user.projects }
+        render json: { employee: @current_user, jobs: @current_user.jobs}
       end
     else
       render json: { error: 'Not Authorized' }, status: 401

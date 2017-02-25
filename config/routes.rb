@@ -5,11 +5,8 @@ Rails.application.routes.draw do
     get '/orgs/showPostings' => 'orgs#show_postings'
     get '/orgs/whoAreWe' => 'orgs#who_are_we'
     get '/jobs/job_type/:job_type' => 'jobs#show_job_type'
-    resources :employee_projects
     resources :employee_jobs
-    resources :org_projects
     resources :org_jobs
-    resources :projects
     resources :jobs
     resources :employers
     resources :orgs

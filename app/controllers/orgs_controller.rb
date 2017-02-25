@@ -19,13 +19,11 @@ class OrgsController < ApplicationController
     @org = Org.find(@current_user.org.id)
     casual_jobs = @org.jobs.where({ job_type: "casual"}).sort_by {|x| x.updated_at}.reverse
     stable_jobs = @org.jobs.where({ job_type: "stable"}).sort_by {|x| x.updated_at}.reverse
-    projects = @org.projects.sort_by {|x| x.updated_at}.reverse
     render :json => {
       :me => @current_user.as_json,
       :org => @org.as_json,
       :casual_jobs => casual_jobs.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}} ]) },
-      :stable_jobs => stable_jobs.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}} ]) },
-      :projects => projects
+      :stable_jobs => stable_jobs.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}} ]) }
     }
   end
 
