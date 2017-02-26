@@ -15,7 +15,7 @@ class JobsController < ApplicationController
     @jobs = Job.where({job_type: job_type_id})
     # logger.debug "job_type = "
     # logger.debug params[:job_type]
-    render json: @jobs.sort_by {|x| x.updated_at}.reverse, :include => [:employment_types, {:org => {:include => [:employers]}}]
+    render json: @jobs.sort_by {|x| x.updated_at}.reverse, :include => [:employment_types, {:orgs => {:include => [:employers]}}]
   end
 
   # GET /jobs/1

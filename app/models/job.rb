@@ -5,7 +5,7 @@ class Job < ApplicationRecord
   has_one :employer, through: :employer_job
 
   has_many :org_jobs, :dependent => :destroy
-  has_many :orgs, through: :org_job
+  has_many :orgs, through: :org_jobs
 
   has_many :employee_jobs, :dependent => :nullify
   has_many :employees, through: :employee_jobs
