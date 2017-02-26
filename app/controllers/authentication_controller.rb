@@ -4,7 +4,8 @@ class AuthenticationController < ApplicationController
   def return_user
     if @current_user
       if @iam == 'employer'
-        render json: { employer: @current_user, org: @current_user.org, jobs: @current_user.org.jobs.sort_by{|x| x.created_at}.reverse}
+        jobs = @current_user.org.jobs.sort_by{|x| x.created_at}.reverse
+        render json: { employer: @current_user, org: @current_user.org, jobs: jobs}
       else
         render json: { employee: @current_user, jobs: @current_user.jobs}
       end
