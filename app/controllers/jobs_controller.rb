@@ -75,7 +75,10 @@ class JobsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def job_params
-      params.require(:job).permit(:title, :description, :deadline, :salary_type, :salary_value, :salary_high, :salary_low, :salary_unit, :position, :attachment_url, :employment_types, :job_type)
+      params.require(:job).permit(
+        :title, :description, :deadline, :job_type,
+        :salary_type, :salary_value, :salary_high, :salary_low, :salary_unit,
+        :position, :attachment_url, :employment_types)
     end
 
     def add_employment_types
@@ -84,6 +87,25 @@ class JobsController < ApplicationController
       params[:job][:employment_types].each do |employment_type|
         logger.debug employment_type
 			  @e_type = EmploymentType.find_by(name: employment_type)
+        logger.debug "@e_type.name"
+        logger.debug @e_type.name
+        @j_e_t = JobEmploymentType.new()
+        @j_e_t.job = @job
+        @j_e_t.employment_type = @e_type
+        unless @j_e_t.save
+          render json: @j_e_t.errors, status: :unprocessable_entity
+          return false
+        end
+			end
+      return true
+    end
+
+    def add_periods
+      logger.debug "inside add_periods"
+      params[:job][:periods] ||= []
+      params[:job][:periods].each do |period|
+        logger.debug period
+			  @period = Period.
         logger.debug "@e_type.name"
         logger.debug @e_type.name
         @j_e_t = JobEmploymentType.new()
