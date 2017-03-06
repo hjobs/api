@@ -105,17 +105,18 @@ class JobsController < ApplicationController
       params[:job][:periods] ||= []
       params[:job][:periods].each do |period|
         logger.debug period
-			  @period = Period.
-        logger.debug "@e_type.name"
-        logger.debug @e_type.name
-        @j_e_t = JobEmploymentType.new()
-        @j_e_t.job = @job
-        @j_e_t.employment_type = @e_type
-        unless @j_e_t.save
-          render json: @j_e_t.errors, status: :unprocessable_entity
+        @period = Period.find_or_initialize_by(start_time: period[:start_time], end_time: period[:end_time])
+        unless @period.save
+          render json: @period.errors, status: :unprocessable_entity
           return false
         end
-			end
+
+        @job_period = JobPeriod.new(job: @job, period: @period)
+        unless @job_period.save
+          render json: @job_period.errors, status: :unprocessable_entity
+          return false
+        else
+      end
       return true
     end
 
