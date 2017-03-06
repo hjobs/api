@@ -1,11 +1,10 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  country: MyString
-  region: MyString
-  city: MyString
-  district: MyString
-  address: MyString
+  country: HK
+  region: Kowloon
+  district: "Kowloon Bay"
+  address: "Here"
 
 two:
   country: MyString

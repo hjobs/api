@@ -40,6 +40,11 @@ class JobsController < ApplicationController
         return
       end
 
+      unless add_employment_types && add_locations && add_periods
+        @job.destroy
+        return
+      end
+
       if @oj.save
         render json: @job, status: :created
       else
@@ -101,12 +106,15 @@ class JobsController < ApplicationController
     end
 
     def add_periods
-      logger.debug "inside add_periods"
+      period_arr = []
       params[:job][:periods] ||= []
       params[:job][:periods].each do |period|
         logger.debug period
         @period = Period.find_or_initialize_by(start_time: period[:start_time], end_time: period[:end_time])
-        unless @period.save
+        if @period.save
+          period_arr << @period
+        else
+          period_arr.each do |period| period.destroy end
           render json: @period.errors, status: :unprocessable_entity
           return false
         end
@@ -115,7 +123,23 @@ class JobsController < ApplicationController
         unless @job_period.save
           render json: @job_period.errors, status: :unprocessable_entity
           return false
+        end
+      end
+      return true
+    end
+
+    def add_locations
+      location_arr = []
+      params[:job][:locations] ||= []
+      params[:job][:locations].each do |location|
+        @location = Location.find_or_initialize_by(address: location.address)
+        if @location.save
+          location_arr << @location
         else
+          location_arr.each do |l| l.destroy end
+          render json: @location.errors, status: :unprocessable_entity
+          return false
+        end
       end
       return true
     end
