@@ -5,7 +5,7 @@ class JobsController < ApplicationController
   # GET /jobs
   def index
     @jobs = Job.all
-    render json: @jobs.sort_by {|x| x.updated_at}.reverse, :include => [:employment_types, {:org => {:include => [:employers]}}]
+    render json: @jobs.sort_by {|x| x.updated_at}.reverse, :include => [:employment_types, {:orgs => {:include => [:employers]}}, :locations, :periods]
   end
 
   def show_job_type
@@ -15,7 +15,7 @@ class JobsController < ApplicationController
     @jobs = Job.where({job_type: job_type_id})
     # logger.debug "job_type = "
     # logger.debug params[:job_type]
-    render json: @jobs.sort_by {|x| x.updated_at}.reverse, :include => [:employment_types, {:orgs => {:include => [:employers]}}]
+    render json: @jobs.sort_by {|x| x.updated_at}.reverse, :include => [:employment_types, {:orgs => {:include => [:employers]}}, :locations, :periods]
   end
 
   # GET /jobs/1
@@ -59,7 +59,7 @@ class JobsController < ApplicationController
   # PATCH/PUT /jobs/1
   def update
     if @job.update(job_params)
-      render json: @job
+      render json: @job, :include => [:employment_types, {:orgs => {:include => [:employers]}}, :locations, :periods]
     else
       render json: @job.errors, status: :unprocessable_entity
     end
@@ -132,12 +132,20 @@ class JobsController < ApplicationController
       location_arr = []
       params[:job][:locations] ||= []
       params[:job][:locations].each do |location|
-        @location = Location.find_or_initialize_by(address: location.address)
+        @location = Location.find_or_initialize_by(address: location[:address])
+        logger.debug @location
         if @location.save
           location_arr << @location
         else
           location_arr.each do |l| l.destroy end
           render json: @location.errors, status: :unprocessable_entity
+          return false
+        end
+
+        @jl = JobLocation.create(:job => @job, :location => @location)
+        unless @jl.save
+          location_arr.each do |l| l.destroy end
+          render json: @jl.errors, status: :unprocessable_entity
           return false
         end
       end

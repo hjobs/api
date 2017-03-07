@@ -39,7 +39,7 @@ Rails.application.configure do
 
   logger           = ActiveSupport::Logger.new(STDOUT)
   logger.formatter = config.log_formatter
-  config.log_level = :info
+  config.log_level = :debug
   config.logger = ActiveSupport::TaggedLogging.new(logger)
 
 
