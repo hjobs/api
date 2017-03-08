@@ -25,10 +25,10 @@ class OrgsController < ApplicationController
     render :json => {
       :me => @current_user.as_json,
       :org => @org.as_json,
-      :quick_jobs => @quick_jobs.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, {:orgs => {:include => [:employers]}}, :locations, :periods] },
-      :stable_jobs => @stable_jobs.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, {:orgs => {:include => [:employers]}}, :locations, :periods] ]) },
-      :internships => @internships.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, {:orgs => {:include => [:employers]}}, :locations, :periods] ]) },
-      :projects => @projects.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, {:orgs => {:include => [:employers]}}, :locations, :periods] ]) }
+      :quick_jobs => @quick_jobs.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, {:orgs => {:include => [:employers]}}, :locations, :periods] )},
+      :stable_jobs => @stable_jobs.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, {:orgs => {:include => [:employers]}}, :locations, :periods] )},
+      :internships => @internships.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, {:orgs => {:include => [:employers]}}, :locations, :periods] )},
+      :projects => @projects.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, {:orgs => {:include => [:employers]}}, :locations, :periods] )}
     }
   end
 
