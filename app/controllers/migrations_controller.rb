@@ -4,17 +4,19 @@ class MigrationsController < ApplicationController
   # GET /migrate_traffic
   def migrate_traffic(projects)
     projects.each do |j|
-      job = Job.create(
+      job = Job.new(
         :title => j[:title],
         :description => j[:description],
         :job_type => 3
       )
-      job.save
-      oj = OrgJob.create(
+      return unless job.save
+      @jobsarr << job
+      oj = OrgJob.new(
         :job => job,
-        :org_id => j[:job]
+        :org_id => j[:org]
       )
-      oj.save
+      return unless oj.save
+      @ojsarr << oj
     end
   end
 end
