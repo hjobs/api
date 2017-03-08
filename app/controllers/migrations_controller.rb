@@ -6,12 +6,13 @@ class MigrationsController < ApplicationController
     projects.each do |j|
       job = Job.create(
         :title => j[:title],
-        :description => j[:description]
+        :description => j[:description],
+        :job_type => 3
       )
       job.save
       oj = OrgJob.create(
         :job => job,
-        :org_id => Org.last.id
+        :org_id => j[:job]
       )
       oj.save
     end
