@@ -1,5 +1,5 @@
 class JobsController < ApplicationController
-  skip_before_action :authenticate_request, only: [:index, :show, :index, :show_job_type]
+  skip_before_action :authenticate_request, only: [:index, :show, :index, :show_job_type, :get_picked]
   before_action :set_job, only: [:show, :update, :destroy]
 
   # GET /jobs
@@ -9,13 +9,26 @@ class JobsController < ApplicationController
   end
 
   def show_job_type
-    job_type_id = Job.job_types[params[:job_type]]
-    # logger.debug "job_type_id = "
-    # logger.debug job_type_id
-    @jobs = Job.where({job_type: job_type_id})
+    job_type = Job.job_types[params[:job_type]]
+    # logger.debug "job_type = "
+    # logger.debug job_type
+    @jobs = Job.where({job_type: job_type})
     # logger.debug "job_type = "
     # logger.debug params[:job_type]
     render json: @jobs.sort_by {|x| x.updated_at}.reverse, :include => [:employment_types, {:orgs => {:include => [:employers]}}, :locations, :periods]
+  end
+
+  # GET /jobs/get_picked
+  def get_picked
+    counts = 1
+    job_arr = []
+    Job.where(job_type: 'quick').sort_by {|x| x.updated_at}.reverse.each do |job|
+      job_arr << job if counts <= 3
+      counts += 1
+      break if counts > 3
+    end
+
+    render json: job_arr.sort_by {|x| x.updated_at}.reverse, :include => [:employment_types, {:orgs => {:include => [:employers]}}, :locations, :periods]
   end
 
   # GET /jobs/1
