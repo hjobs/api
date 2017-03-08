@@ -32,8 +32,6 @@ class OrgsController < ApplicationController
     }
   end
 
-
-
   # GET /orgs/whoAreWe
   def who_are_we
     @org = Org.find(@current_user.org.id)
