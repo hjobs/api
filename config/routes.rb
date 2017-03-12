@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     get '/orgs/whoAreWe' => 'orgs#who_are_we'
     get '/jobs/job_type/:job_type' => 'jobs#show_job_type'
     get '/jobs/get_picked' => 'jobs#get_picked'
+    resources :logs
     resources :employee_jobs
     resources :org_jobs
     resources :jobs

@@ -3,4 +3,6 @@ class Org < ApplicationRecord
   
   has_many :org_jobs
   has_many :jobs, through: :org_jobs
+
+  has_many :logs
 end

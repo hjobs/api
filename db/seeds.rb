@@ -7,3 +7,8 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 # require_relative "seed_location"
+
+JobType.find_or_create_by(:id => 0, :name => "quick")
+JobType.find_or_create_by(:id => 1, :name => "stable")
+JobType.find_or_create_by(:id => 2, :name => "intern")
+JobType.find_or_create_by(:id => 3, :name => "project")

@@ -5,4 +5,6 @@ class Employer < ApplicationRecord
 
   has_many :employer_jobs
   has_many :jobs, through: :employer_jobs
+
+  has_many :logs
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170305124927) do
+ActiveRecord::Schema.define(version: 20170312161254) do
 
   create_table "employee_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "status"
@@ -87,6 +87,12 @@ ActiveRecord::Schema.define(version: 20170305124927) do
     t.index ["period_id"], name: "index_job_periods_on_period_id", using: :btree
   end
 
+  create_table "job_types", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "name",       limit: 191
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
   create_table "jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "title"
     t.text     "description",    limit: 65535
@@ -111,6 +117,26 @@ ActiveRecord::Schema.define(version: 20170305124927) do
     t.string   "address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "name"
+    t.string   "action"
+    t.integer  "job_id"
+    t.integer  "employee_id"
+    t.integer  "employer_id"
+    t.integer  "org_id"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.integer  "job_type_id"
+    t.string   "component",   limit: 191
+    t.string   "page",        limit: 191
+    t.string   "target",      limit: 191
+    t.index ["employee_id"], name: "index_logs_on_employee_id", using: :btree
+    t.index ["employer_id"], name: "index_logs_on_employer_id", using: :btree
+    t.index ["job_id"], name: "index_logs_on_job_id", using: :btree
+    t.index ["job_type_id"], name: "index_logs_on_job_type_id", using: :btree
+    t.index ["org_id"], name: "index_logs_on_org_id", using: :btree
   end
 
   create_table "org_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -154,6 +180,11 @@ ActiveRecord::Schema.define(version: 20170305124927) do
   add_foreign_key "job_locations", "locations"
   add_foreign_key "job_periods", "jobs"
   add_foreign_key "job_periods", "periods"
+  add_foreign_key "logs", "employees"
+  add_foreign_key "logs", "employers"
+  add_foreign_key "logs", "job_types"
+  add_foreign_key "logs", "jobs"
+  add_foreign_key "logs", "orgs"
   add_foreign_key "org_jobs", "jobs"
   add_foreign_key "org_jobs", "orgs"
 end
