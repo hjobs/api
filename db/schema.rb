@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170312161254) do
+ActiveRecord::Schema.define(version: 20170313104720) do
 
   create_table "employee_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "status"
@@ -98,7 +98,7 @@ ActiveRecord::Schema.define(version: 20170312161254) do
     t.text     "description",    limit: 65535
     t.datetime "deadline"
     t.string   "salary_type"
-    t.integer  "salary_value"
+    t.text     "salary_value",   limit: 65535
     t.integer  "salary_high"
     t.integer  "salary_low"
     t.string   "salary_unit"
