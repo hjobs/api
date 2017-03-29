@@ -15,6 +15,7 @@ class JobSerializer < ActiveModel::Serializer
               :event
 
   has_one :employer
+  has_many :orgs
   has_many :employees
   has_many :periods
   has_many :locations
