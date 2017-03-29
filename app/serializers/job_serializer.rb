@@ -3,7 +3,7 @@ class JobSerializer < ActiveModel::Serializer
               :title,
               :description,
               :salary_type,
-              :salary_specific,
+              :salary_value,
               :salary_high,
               :salary_low,
               :salary_unit,
