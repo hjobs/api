@@ -19,5 +19,8 @@ class Job < ApplicationRecord
   has_many :job_employment_types, :dependent => :destroy
   has_many :employment_types, through: :job_employment_types
 
+  has_many :job_langs, :dependent => :destroy
+  has_many :langs, through: :job_langs
+
   has_many :logs
 end
