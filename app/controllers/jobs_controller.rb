@@ -5,7 +5,7 @@ class JobsController < ApplicationController
   # GET /jobs
   def index
     @jobs = Job.all
-    render json: @jobs.sort_by {|x| x.updated_at}.reverse, :include => [:employment_types, {:orgs => {:include => [:employers]}}, :locations, :periods, :langs]
+    render json: @jobs.sort_by {|x| x.updated_at}.reverse
   end
 
   def show_job_type
@@ -15,7 +15,7 @@ class JobsController < ApplicationController
     @jobs = Job.where({job_type: job_type})
     # logger.debug "job_type = "
     # logger.debug params[:job_type]
-    render json: @jobs.sort_by {|x| x.updated_at}.reverse, :include => [:employment_types, {:orgs => {:include => [:employers]}}, :locations, :periods, :langs]
+    render json: @jobs.sort_by {|x| x.updated_at}.reverse
   end
 
   # GET /jobs/get_picked
@@ -28,7 +28,7 @@ class JobsController < ApplicationController
       break if counts > 3
     end
 
-    render json: job_arr.sort_by {|x| x.updated_at}.reverse, :include => [:employment_types, {:orgs => {:include => [:employers]}}, :locations, :periods, :langs]
+    render json: job_arr.sort_by {|x| x.updated_at}.reverse
   end
 
   # GET /jobs/1
@@ -78,7 +78,7 @@ class JobsController < ApplicationController
   # PATCH/PUT /jobs/1
   def update
     if @job.update(job_params)
-      render json: @job, :include => [:employment_types, {:orgs => {:include => [:employers]}}, :locations, :periods, :langs]
+      render json: @job
     else
       render json: @job.errors, status: :unprocessable_entity
     end
