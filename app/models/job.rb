@@ -22,5 +22,5 @@ class Job < ApplicationRecord
   has_many :job_langs, :dependent => :destroy
   has_many :langs, through: :job_langs
 
-  has_many :logs
+  has_many :logs, :dependent => :nullify
 end
