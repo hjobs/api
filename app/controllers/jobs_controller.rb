@@ -5,7 +5,7 @@ class JobsController < ApplicationController
   # GET /jobs
   def index
     @jobs = Job.all
-    render json: @jobs.sort_by {|x| x.updated_at}.reverse, :include => [:employment_types, {:orgs => {:include => [:employers]}}, :locations, :periods]
+    render json: @jobs.sort_by {|x| x.updated_at}.reverse, :include => [:employment_types, {:orgs => {:include => [:employers]}}, :locations, :periods, :langs]
   end
 
   def show_job_type
@@ -15,7 +15,7 @@ class JobsController < ApplicationController
     @jobs = Job.where({job_type: job_type})
     # logger.debug "job_type = "
     # logger.debug params[:job_type]
-    render json: @jobs.sort_by {|x| x.updated_at}.reverse, :include => [:employment_types, {:orgs => {:include => [:employers]}}, :locations, :periods]
+    render json: @jobs.sort_by {|x| x.updated_at}.reverse, :include => [:employment_types, {:orgs => {:include => [:employers]}}, :locations, :periods, :langs]
   end
 
   # GET /jobs/get_picked
@@ -28,7 +28,7 @@ class JobsController < ApplicationController
       break if counts > 3
     end
 
-    render json: job_arr.sort_by {|x| x.updated_at}.reverse, :include => [:employment_types, {:orgs => {:include => [:employers]}}, :locations, :periods]
+    render json: job_arr.sort_by {|x| x.updated_at}.reverse, :include => [:employment_types, {:orgs => {:include => [:employers]}}, :locations, :periods, :langs]
   end
 
   # GET /jobs/1
@@ -39,6 +39,7 @@ class JobsController < ApplicationController
   # POST /jobs
   def create
     @job = Job.new(job_params)
+    @job.employer = @current_user
 
     if @job.save
 
@@ -58,6 +59,11 @@ class JobsController < ApplicationController
         return
       end
 
+      unless add_langs
+        @job.destroy
+        return
+      end
+
       if @oj.save
         render json: @job, status: :created
       else
@@ -72,7 +78,7 @@ class JobsController < ApplicationController
   # PATCH/PUT /jobs/1
   def update
     if @job.update(job_params)
-      render json: @job, :include => [:employment_types, {:orgs => {:include => [:employers]}}, :locations, :periods]
+      render json: @job, :include => [:employment_types, {:orgs => {:include => [:employers]}}, :locations, :periods, :langs]
     else
       render json: @job.errors, status: :unprocessable_entity
     end
@@ -94,9 +100,9 @@ class JobsController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def job_params
       params.require(:job).permit(
-        :title, :description, :deadline, :job_type,
+        :title, :description, :deadline, :job_type, :event,
         :salary_type, :salary_value, :salary_high, :salary_low, :salary_unit,
-        :position, :attachment_url, :employment_types)
+        :position, :attachment_url, :employment_types, :periods, :locations)
     end
 
     def add_employment_types
@@ -123,7 +129,11 @@ class JobsController < ApplicationController
       params[:job][:periods] ||= []
       params[:job][:periods].each do |period|
         logger.debug period
-        @period = Period.find_or_initialize_by(start_time: period[:start_time], end_time: period[:end_time])
+        p = {}
+        p[:date] = Date.parse(period[:date]) if period[:date]
+        p[:start_time] = Time.parse(period[:start_time]) if period[:start_time]
+        p[:end_time] = Time.parse(period[:end_time]) if period[:end_time]
+        @period = Period.find_or_initialize_by(p)
         if @period.save
           period_arr << @period
         else
@@ -159,6 +169,29 @@ class JobsController < ApplicationController
         unless @jl.save
           location_arr.each do |l| l.destroy end
           render json: @jl.errors, status: :unprocessable_entity
+          return false
+        end
+      end
+      return true
+    end
+
+    def add_langs
+      job_lang_arr = []
+      params[:job][:langs] ||= []
+      params[:job][:langs].each do |lang|
+        logger.debug lang
+        @lang = Lang.find_by(:name => lang)
+        unless @lang
+          render json: {error: "no language found from parameters"}
+          return false
+        end
+        
+        @job_lang = JobLang.new(:lang => @lang, :job => @job)
+        if @job_lang.save
+          job_lang_arr << @job_lang
+        else
+          job_lang_arr.each do |job_lang| job_lang.destroy end
+          render json: @job_lang.errors, status: :unprocessable_entity
           return false
         end
       end

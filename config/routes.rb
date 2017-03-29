@@ -8,13 +8,10 @@ Rails.application.routes.draw do
     get '/jobs/get_picked' => 'jobs#get_picked'
     resources :logs
     resources :employee_jobs
-    resources :org_jobs
     resources :jobs
     resources :employers
     resources :orgs
     resources :employees
-    resources :job_employment_types
-    resources :employment_types
   end
 
   
