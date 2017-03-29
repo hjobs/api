@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170313104720) do
+ActiveRecord::Schema.define(version: 20170329035802) do
 
   create_table "employee_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "status"
@@ -69,6 +69,15 @@ ActiveRecord::Schema.define(version: 20170313104720) do
     t.index ["job_id"], name: "index_job_employment_types_on_job_id", using: :btree
   end
 
+  create_table "job_langs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
+    t.integer  "job_id"
+    t.integer  "lang_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["job_id"], name: "index_job_langs_on_job_id", using: :btree
+    t.index ["lang_id"], name: "index_job_langs_on_lang_id", using: :btree
+  end
+
   create_table "job_locations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "job_id"
     t.integer  "location_id"
@@ -107,6 +116,14 @@ ActiveRecord::Schema.define(version: 20170313104720) do
     t.datetime "updated_at",                   null: false
     t.string   "attachment_url"
     t.integer  "job_type"
+    t.string   "event",          limit: 191
+  end
+
+  create_table "langs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
+    t.string   "name",       limit: 191
+    t.string   "country",    limit: 191
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   create_table "locations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -176,6 +193,8 @@ ActiveRecord::Schema.define(version: 20170313104720) do
   add_foreign_key "employers", "orgs"
   add_foreign_key "job_employment_types", "employment_types"
   add_foreign_key "job_employment_types", "jobs"
+  add_foreign_key "job_langs", "jobs"
+  add_foreign_key "job_langs", "langs"
   add_foreign_key "job_locations", "jobs"
   add_foreign_key "job_locations", "locations"
   add_foreign_key "job_periods", "jobs"
