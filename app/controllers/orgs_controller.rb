@@ -19,15 +19,15 @@ class OrgsController < ApplicationController
     @org = Org.find(@current_user.org.id)
     @quick_jobs = @org.jobs.where(job_type: :quick).sort_by {|x| x.updated_at}.reverse
     @stable_jobs = @org.jobs.where(job_type: :stable).sort_by {|x| x.updated_at}.reverse
-    @internships = @org.jobs.where(job_type: :internship).sort_by {|x| x.updated_at}.reverse
+    @interns = @org.jobs.where(job_type: :intern).sort_by {|x| x.updated_at}.reverse
     @projects = @org.jobs.where(job_type: :project).sort_by {|x| x.updated_at}.reverse
-    logger.debug [@projects, @internships]
+    logger.debug [@projects, @interns]
     render :json => {
       :me => @current_user.as_json,
       :org => @org.as_json,
       :quick_jobs => @quick_jobs.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, :orgs, :locations, :periods, :langs] )},
       :stable_jobs => @stable_jobs.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, :orgs, :locations, :periods, :langs] )},
-      :internships => @internships.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, :orgs, :locations, :periods, :langs] )},
+      :interns => @interns.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, :orgs, :locations, :periods, :langs] )},
       :projects => @projects.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, :orgs, :locations, :periods, :langs] )}
     }
   end
