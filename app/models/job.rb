@@ -1,5 +1,5 @@
 class Job < ApplicationRecord
-  enum job_type: [:quick, :stable, :internship, :project]
+  enum job_type: [:quick, :stable, :intern, :project]
 
   has_many :job_periods, :dependent => :destroy
   has_many :periods, through: :job_periods
