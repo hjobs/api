@@ -17,10 +17,11 @@ class OrgsController < ApplicationController
   # GET /orgs/showPostings
   def show_postings
     @org = Org.find(@current_user.org.id)
-    @quick_jobs = @org.jobs.where(job_type: :quick).sort_by {|x| x.updated_at}.reverse
-    @stable_jobs = @org.jobs.where(job_type: :stable).sort_by {|x| x.updated_at}.reverse
-    @interns = @org.jobs.where(job_type: :intern).sort_by {|x| x.updated_at}.reverse
-    @projects = @org.jobs.where(job_type: :project).sort_by {|x| x.updated_at}.reverse
+    @jobs = @org.jobs.left_outer_joins(:periods).where("periods.id IS NULL OR periods.date >= :today", :today => Date.today).uniq
+    @quick_jobs = sort(@jobs.where(:job_type => :quick))
+    @stable_jobs = sort(@jobs.where(:job_type => :stable))
+    @interns = sort(@jobs.where(:job_type => :intern))
+    @projects = sort(@jobs.where(:job_type => :project))
     logger.debug [@projects, @interns]
     render :json => {
       :me => @current_user.as_json,
@@ -109,5 +110,15 @@ class OrgsController < ApplicationController
 
     def employer_params
       params.require(:org).permit(:email, :password)
+    end
+
+    def sort(jobs)
+      jobs.sort_by { |j|
+        if j.periods.empty?
+          j.updated_at
+        else
+          j.periods[0].date
+        end
+      }.reverse
     end
 end

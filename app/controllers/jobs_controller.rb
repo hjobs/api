@@ -12,7 +12,7 @@ class JobsController < ApplicationController
     job_type = Job.job_types[params[:job_type]]
     # logger.debug "job_type = "
     # logger.debug job_type
-    @jobs = Job.where({job_type: job_type})
+    @jobs = Job.where({job_type: job_type}).left_outer_joins(:periods).where("periods.id IS NULL OR periods.date >= :today", :today => Date.today).uniq
     # logger.debug "job_type = "
     # logger.debug params[:job_type]
     render json: @jobs.sort_by {|x| x.updated_at}.reverse
