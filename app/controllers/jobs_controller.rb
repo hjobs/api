@@ -15,7 +15,7 @@ class JobsController < ApplicationController
     @jobs = Job.where({job_type: job_type}).left_outer_joins(:periods).where("periods.id IS NULL OR periods.date >= :today", :today => Date.today).uniq
     # logger.debug "job_type = "
     # logger.debug params[:job_type]
-    render json: @jobs.sort_by {|x| x.updated_at}.reverse
+    render json: sort(@jobs)
   end
 
   # GET /jobs/get_picked
@@ -28,7 +28,7 @@ class JobsController < ApplicationController
       break if counts > 3
     end
 
-    render json: job_arr.sort_by {|x| x.updated_at}.reverse
+    render json: sort(job_arr)
   end
 
   # GET /jobs/1
@@ -200,5 +200,15 @@ class JobsController < ApplicationController
 
     def org_job_params
        params.require(:job).permit(:org_id)
+    end
+
+    def sort(jobs)
+      jobs.sort_by { |j|
+        if j.periods.empty?
+          j.updated_at
+        else
+          j.periods[0].date
+        end
+      }.reverse
     end
 end
