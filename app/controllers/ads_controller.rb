@@ -4,7 +4,7 @@ class AdsController < ApplicationController
 
   # GET /ads
   def index
-    @ads = Ad.all
+    @ads = Ad.all.shuffle
 
     render json: @ads
   end
