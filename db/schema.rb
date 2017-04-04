@@ -10,7 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170329035802) do
+ActiveRecord::Schema.define(version: 20170404084337) do
+
+  create_table "ads", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
+    t.string   "link",        limit: 191
+    t.string   "image",       limit: 191
+    t.string   "title",       limit: 191
+    t.text     "description", limit: 65535
+    t.integer  "org_id"
+    t.integer  "employer_id"
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.index ["employer_id"], name: "index_ads_on_employer_id", using: :btree
+    t.index ["org_id"], name: "index_ads_on_org_id", using: :btree
+  end
 
   create_table "employee_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "status"
@@ -186,6 +199,8 @@ ActiveRecord::Schema.define(version: 20170329035802) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "ads", "employers"
+  add_foreign_key "ads", "orgs"
   add_foreign_key "employee_jobs", "employees"
   add_foreign_key "employee_jobs", "jobs"
   add_foreign_key "employer_jobs", "employers"
