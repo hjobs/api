@@ -20,6 +20,7 @@ gem 'jwt'
 gem 'simple_command'
 gem 'rest-client'
 gem "rails-erd"
+gem "has_scope"
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production

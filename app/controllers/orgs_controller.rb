@@ -47,8 +47,7 @@ class OrgsController < ApplicationController
   # POST /orgs
   def create
     @org = Org.new(org_params)
-    @org.logo.sub! '?dl=0', '?raw=1'
-
+    
     if @org.save
       @employer = Employer.new(employer_params)
       @employer.admin = true

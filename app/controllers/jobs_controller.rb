@@ -2,21 +2,28 @@ class JobsController < ApplicationController
   skip_before_action :authenticate_request, only: [:index, :show, :index, :show_job_type, :get_picked]
   before_action :set_job, only: [:show, :update, :destroy]
 
+  has_scope :by_job_type, allow_blank: true, default: "quick"
+  has_scope :after_today, allow_blank: true, default: true
+  has_scope :offset_by, allow_blank: true, default: 0
+
   # GET /jobs
   def index
-    @jobs = Job.all
-    render json: @jobs.sort_by {|x| x.updated_at}.reverse
+    @jobs = apply_scopes(Job)
+    render json: {
+      :jobs => @jobs.collect{ |j| j.as_json(:include => [:employer, :orgs, :employees, :periods, :locations, :employment_types, :langs])},
+      :total_count => @jobs.unscope(:offset, :limit).count
+    }
   end
 
-  def show_job_type
-    job_type = Job.job_types[params[:job_type]]
-    # logger.debug "job_type = "
-    # logger.debug job_type
-    @jobs = Job.where({job_type: job_type}).left_outer_joins(:periods).where("periods.id IS NULL OR periods.date >= :today", :today => Date.today).uniq
-    # logger.debug "job_type = "
-    # logger.debug params[:job_type]
-    render json: sort(@jobs)
-  end
+  # def show_job_type
+  #   job_type = Job.job_types[params[:job_type]]
+  #   # logger.debug "job_type = "
+  #   # logger.debug job_type
+  #   @jobs = Job.all.after_today
+  #   # logger.debug "job_type = "
+  #   # logger.debug params[:job_type]
+  #   render json: sort(@jobs)
+  # end
 
   # GET /jobs/get_picked
   def get_picked
