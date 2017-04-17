@@ -1,5 +1,5 @@
 class Employee < ApplicationRecord
-  has_many :auths, as: :authable
+  has_many :auths, as: :authable, dependent: :destroy
   has_many :employee_jobs
   has_many :jobs, through: :employee_jobs
 
