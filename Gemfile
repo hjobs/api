@@ -21,7 +21,8 @@ gem 'simple_command'
 gem 'rest-client'
 gem "rails-erd"
 gem "has_scope"
-gem "omniauth-oauth2", '~> 1.3.1'
+ gem "omniauth-oauth2", '~> 1.3.1'
+# gem "omniauth-oauth2"
 gem "omniauth-google-oauth2"
 gem 'omniauth-facebook'
 gem 'omniauth-linkedin-oauth2'
