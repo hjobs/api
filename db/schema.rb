@@ -10,12 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170404084337) do
+ActiveRecord::Schema.define(version: 20170417055250) do
 
   create_table "ads", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
-    t.string   "link",        limit: 191
-    t.string   "image",       limit: 191
-    t.string   "title",       limit: 191
+    t.string   "link"
+    t.string   "image"
+    t.string   "title"
     t.text     "description", limit: 65535
     t.integer  "org_id"
     t.integer  "employer_id"
@@ -25,8 +25,18 @@ ActiveRecord::Schema.define(version: 20170404084337) do
     t.index ["org_id"], name: "index_ads_on_org_id", using: :btree
   end
 
+  create_table "auths", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
+    t.string   "provider"
+    t.string   "uid"
+    t.string   "authable_type"
+    t.integer  "authable_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["authable_type", "authable_id"], name: "index_auths_on_authable_type_and_authable_id", using: :btree
+  end
+
   create_table "employee_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string   "status"
+    t.string   "status",      limit: 255
     t.text     "message",     limit: 65535
     t.integer  "job_id"
     t.integer  "employee_id"
@@ -37,13 +47,19 @@ ActiveRecord::Schema.define(version: 20170404084337) do
   end
 
   create_table "employees", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string   "email"
-    t.string   "password_digest"
-    t.string   "name"
+    t.string   "email",           limit: 255
+    t.string   "password_digest", limit: 255
+    t.string   "name",            limit: 255
     t.text     "description",     limit: 65535
-    t.string   "country"
+    t.string   "country",         limit: 255
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
+    t.string   "provider"
+    t.string   "uid"
+    t.string   "pic_hd"
+    t.string   "pic_sm"
+    t.string   "first_name"
+    t.string   "last_name"
   end
 
   create_table "employer_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -56,9 +72,9 @@ ActiveRecord::Schema.define(version: 20170404084337) do
   end
 
   create_table "employers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string   "email"
-    t.string   "password_digest"
-    t.string   "name"
+    t.string   "email",           limit: 255
+    t.string   "password_digest", limit: 255
+    t.string   "name",            limit: 255
     t.text     "description",     limit: 65535
     t.integer  "org_id"
     t.datetime "created_at",                    null: false
@@ -68,9 +84,9 @@ ActiveRecord::Schema.define(version: 20170404084337) do
   end
 
   create_table "employment_types", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "name",       limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   create_table "job_employment_types", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -110,48 +126,48 @@ ActiveRecord::Schema.define(version: 20170404084337) do
   end
 
   create_table "job_types", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string   "name",       limit: 191
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-  end
-
-  create_table "jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string   "title"
-    t.text     "description",    limit: 65535
-    t.datetime "deadline"
-    t.string   "salary_type"
-    t.text     "salary_value",   limit: 65535
-    t.integer  "salary_high"
-    t.integer  "salary_low"
-    t.string   "salary_unit"
-    t.string   "position"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-    t.string   "attachment_url"
-    t.integer  "job_type"
-    t.string   "event",          limit: 191
-  end
-
-  create_table "langs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
-    t.string   "name",       limit: 191
-    t.string   "country",    limit: 191
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-  end
-
-  create_table "locations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string   "country"
-    t.string   "region"
-    t.string   "city"
-    t.string   "district"
-    t.string   "address"
+    t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "title",          limit: 255
+    t.text     "description",    limit: 65535
+    t.datetime "deadline"
+    t.string   "salary_type",    limit: 255
+    t.text     "salary_value",   limit: 65535
+    t.integer  "salary_high"
+    t.integer  "salary_low"
+    t.string   "salary_unit",    limit: 255
+    t.string   "position",       limit: 255
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.string   "attachment_url", limit: 255
+    t.integer  "job_type"
+    t.string   "event"
+  end
+
+  create_table "langs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.string   "name"
-    t.string   "action"
+    t.string   "country"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "locations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "country",    limit: 255
+    t.string   "region",     limit: 255
+    t.string   "city",       limit: 255
+    t.string   "district",   limit: 255
+    t.string   "address",    limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "name",        limit: 255
+    t.string   "action",      limit: 255
     t.integer  "job_id"
     t.integer  "employee_id"
     t.integer  "employer_id"
@@ -159,9 +175,9 @@ ActiveRecord::Schema.define(version: 20170404084337) do
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
     t.integer  "job_type_id"
-    t.string   "component",   limit: 191
-    t.string   "page",        limit: 191
-    t.string   "target",      limit: 191
+    t.string   "component"
+    t.string   "page"
+    t.string   "target"
     t.index ["employee_id"], name: "index_logs_on_employee_id", using: :btree
     t.index ["employer_id"], name: "index_logs_on_employer_id", using: :btree
     t.index ["job_id"], name: "index_logs_on_job_id", using: :btree
@@ -179,15 +195,15 @@ ActiveRecord::Schema.define(version: 20170404084337) do
   end
 
   create_table "orgs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string   "name"
+    t.string   "name",        limit: 255
     t.text     "description", limit: 65535
-    t.string   "country"
-    t.string   "region"
+    t.string   "country",     limit: 255
+    t.string   "region",      limit: 255
     t.text     "address",     limit: 65535
-    t.string   "logo"
+    t.string   "logo",        limit: 255
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
-    t.string   "email"
+    t.string   "email",       limit: 255
     t.index ["email"], name: "index_orgs_on_email", using: :btree
   end
 
@@ -197,6 +213,26 @@ ActiveRecord::Schema.define(version: 20170404084337) do
     t.date     "date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "ratings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
+    t.integer  "name"
+    t.integer  "value"
+    t.string   "ratable_type"
+    t.integer  "ratable_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["ratable_type", "ratable_id"], name: "index_ratings_on_ratable_type_and_ratable_id", using: :btree
+  end
+
+  create_table "scores", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
+    t.integer  "name"
+    t.integer  "value"
+    t.string   "scorable_type"
+    t.integer  "scorable_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["scorable_type", "scorable_id"], name: "index_scores_on_scorable_type_and_scorable_id", using: :btree
   end
 
   add_foreign_key "ads", "employers"

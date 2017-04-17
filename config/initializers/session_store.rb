@@ -1,0 +1,2 @@
+# Rails.application.config.session_store :cookie_store, key: '_app_session', domain: 'localhost:9080'
+Rails.application.config.session_store :cookie_store, key: '_some_key', domain: :all, tld_length: 2

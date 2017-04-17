@@ -13,3 +13,5 @@ use Rack::Cors do
         :methods => [:get, :post, :delete, :put, :options, :patch]
   end
 end
+
+use Rack::Session::Cookie, secret: ENV["COOKIES_SECRET"]

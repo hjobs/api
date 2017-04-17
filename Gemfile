@@ -21,6 +21,10 @@ gem 'simple_command'
 gem 'rest-client'
 gem "rails-erd"
 gem "has_scope"
+gem "omniauth-oauth2", '~> 1.3.1'
+gem "omniauth-google-oauth2"
+gem 'omniauth-facebook'
+gem 'omniauth-linkedin-oauth2'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
