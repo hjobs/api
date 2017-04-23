@@ -17,6 +17,11 @@ class LogsController < ApplicationController
   # POST /logs
   def create
     @log = Log.new(log_params)
+    if (@iam == 'employee')
+      Log.employee = @current_user
+    elsif (@iam == 'employer')
+      Log.employer = @current_user
+    end
 
     if @log.save
       render json: @log, status: :created

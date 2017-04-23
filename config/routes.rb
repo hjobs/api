@@ -3,7 +3,7 @@ Rails.application.routes.draw do
     get ':any', to: redirect(subdomain: 'www', path: '/%{any}'), any: /.*/
   end
 
-  get   '/login', :to => 'sessions#new', :as => :login
+  get '/login', :to => 'sessions#new', :as => :login
   get 'auth/:provider/callback', to: 'sessions#create'
   get 'auth/failure', :to => 'sessions#failure'
   get 'signout', to: 'sessions#destroy', as: 'signout'
@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     get '/orgs/whoAreWe' => 'orgs#who_are_we'
     get '/jobs/job_type/:job_type' => 'jobs#show_job_type'
     get '/jobs/get_picked' => 'jobs#get_picked'
+    get '/get_employee' => "employees#get_employee"
     resources :ads
     resources :logs
     resources :employee_jobs

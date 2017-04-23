@@ -13,16 +13,23 @@ class EmployeesController < ApplicationController
     render json: @employee
   end
 
-  # POST /employees
-  def create
-    @employee = Employee.new(employee_params)
-
-    if @employee.save
-      render json: @employee, status: :created, location: @employee
-    else
-      render json: @employee.errors, status: :unprocessable_entity
-    end
+  # GET /get_employee/
+  def get_employee
+    @current_user
+    is_employee = params[:iam] == 'employee' && @current_user == Employee.find(@current_user.id)
+    render json: @current_user
   end
+
+  # POST /employees
+  # def create
+  #   @employee = Employee.new(employee_params)
+
+  #   if @employee.save
+  #     render json: @employee, status: :created, location: @employee
+  #   else
+  #     render json: @employee.errors, status: :unprocessable_entity
+  #   end
+  # end
 
   # PATCH/PUT /employees/1
   def update

@@ -11,7 +11,7 @@ class AuthenticateUser < AuthenticationController
     logger.debug @iam
     logger.debug @email
     logger.debug @password
-		logger.debug ['inside authenticateuser.call, @iam is ' + @iam + ", @email = " + @email + ", @password = " + @password]
+		# logger.debug ['inside authenticateuser.call, @iam is ' + @iam + ", @email = " + @email + ", @password = " + @password]
 		if @iam == 'employee'
       JsonWebToken.encode(employee_id: employee.id) if employee
 		elsif @iam == 'employer'
@@ -24,8 +24,8 @@ class AuthenticateUser < AuthenticationController
   attr_accessor :email, :password, :api
 
   def employee
-    employee = Employee.find_by_email(@email)
-    return employee if employee && employee.authenticate(@password)
+    employee = Employee.find(@email)
+    return employee if employee
 
     errors.add :employer_authentication, 'invalid credentials'
     nil

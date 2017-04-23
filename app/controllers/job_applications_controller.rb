@@ -1,13 +1,11 @@
 class JobApplicationsController < ApplicationController
-  skip_before_action :authenticate_request
+  # skip_before_action :authenticate_request
   # , only: [:index, :show, :index, :show_job_type, :get_picked]
 
   # POST /apply
   def apply
-    email = params[:application][:email]
-    name = params[:application][:name]
-    job = Job.find(params[:application][:org_id])
-    @command = MailgunSender.call(email, name, job)
+    job = Job.find(params[:application][:job_id])
+    @command = MailgunSender.call(@current_user[:email], @current_user[:name], job)
     if @command.success?
       render json: { success: true }
     else
