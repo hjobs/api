@@ -35,7 +35,7 @@ class SessionsController < ApplicationController
     url = request.env['omniauth.origin']
     url = "http://localhost:3000" if !url
     query_prefix = url.include?('?') ? "&" : "?"
-    url += query_prefix + 'user=' + EmployeeSerializer.new(@user).to_json + "&auth_token=" + @command.result
+    url += query_prefix "applying=true&user=" + EmployeeSerializer.new(@user).to_json + "&auth_token=" + @command.result
     redirect_to url
   end
 
