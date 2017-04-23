@@ -7,7 +7,7 @@ class SessionsController < ApplicationController
   def create
     auth_hash = request.env['omniauth.auth']
 
-    if session[:user_id]
+    if session[:user_id] && !Employee.find(session[:user_id])
       # Means our user is signed in. Add the authorization to the user
       @user = Employee.find(session[:user_id])
       @user.add_provider(auth_hash)
