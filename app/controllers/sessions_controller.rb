@@ -24,8 +24,6 @@ class SessionsController < ApplicationController
       session[:user_id] = @auth.authable.id
     end
 
-    
-
     unless @command.success?
       @auth.authable.destroy
       render :json => @command.errors
@@ -35,7 +33,8 @@ class SessionsController < ApplicationController
     url = request.env['omniauth.origin']
     url = "http://localhost:3000" if !url
     query_prefix = url.include?('?') ? "&" : "?"
-    url += query_prefix + "applying=true&user=" + EmployeeSerializer.new(@user).to_json + "&auth_token=" + @command.result
+    applying = url.include?('job=') ? "&applying=true" : ""
+    url += query_prefix + "user=" + EmployeeSerializer.new(@user).to_json + "&auth_token=" + @command.result + applying
     redirect_to url
   end
 

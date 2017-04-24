@@ -17,10 +17,15 @@ class LogsController < ApplicationController
   # POST /logs
   def create
     @log = Log.new(log_params)
-    if (@iam == 'employee')
-      Log.employee = @current_user
-    elsif (@iam == 'employer')
-      Log.employer = @current_user
+    logger.debug 'going to log @iam and then iam'
+    logger.debug @iam
+    logger.debug iam
+    if (@current_user)
+      if (@iam == 'employee')
+        @log.employee = @current_user
+      elsif (@iam == 'employer')
+        @log.employer = @current_user
+      end
     end
 
     if @log.save

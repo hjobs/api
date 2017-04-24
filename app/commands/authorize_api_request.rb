@@ -25,7 +25,7 @@ class AuthorizeApiRequest < AuthenticationController
         @user || errors.add(:iam, 'Invalid user type') && nil
       end
     end
-    @user || errors.add(:token, 'Invalid token') && nil
+    !!@user || errors.add(:token, 'Invalid token') && false
   end
 
   def decoded_auth_token
