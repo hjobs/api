@@ -16,20 +16,24 @@ class OrgsController < ApplicationController
 
   # GET /orgs/showPostings
   def show_postings
-    @org = Org.find(@current_user.org.id)
+    @org = @current_user.org
     @jobs = @org.jobs.left_outer_joins(:periods).where("periods.id IS NULL OR periods.date >= :today", :today => Date.today).uniq
-    @quick_jobs = sort(@jobs.where(:job_type => :quick))
-    @stable_jobs = sort(@jobs.where(:job_type => :stable))
-    @interns = sort(@jobs.where(:job_type => :intern))
-    @projects = sort(@jobs.where(:job_type => :project))
-    logger.debug [@projects, @interns]
+    @jobs_json = ActiveModel::SerializableResource.new(
+      @jobs,
+      each_serializer: ActiveModel::Serializer::JobSerializer
+    )
+    # @quick_jobs = sort(@jobs.where(:job_type => :quick))
+    # @stable_jobs = sort(@jobs.where(:job_type => :stable))
+    # @interns = sort(@jobs.where(:job_type => :intern))
+    # @projects = sort(@jobs.where(:job_type => :project))
     render :json => {
       :me => @current_user.as_json,
       :org => @org.as_json,
-      :quick_jobs => @quick_jobs.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, :orgs, :locations, :periods, :langs] )},
-      :stable_jobs => @stable_jobs.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, :orgs, :locations, :periods, :langs] )},
-      :interns => @interns.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, :orgs, :locations, :periods, :langs] )},
-      :projects => @projects.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, :orgs, :locations, :periods, :langs] )}
+      :jobs => @jobs_json
+      # :quick_jobs => @quick_jobs.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, :orgs, :locations, :periods, :langs] )},
+      # :stable_jobs => @stable_jobs.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, :orgs, :locations, :periods, :langs] )},
+      # :interns => @interns.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, :orgs, :locations, :periods, :langs] )},
+      # :projects => @projects.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, :orgs, :locations, :periods, :langs] )}
     }
   end
 

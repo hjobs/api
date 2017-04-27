@@ -40,6 +40,21 @@ class JobsController < ApplicationController
 
   # GET /jobs/1
   def show
+    job_poster = @job.employer
+    
+    is_authorised = (
+      @iam == "employee" ||
+      (
+        job_poster == @current_user ||
+        !@job.orgs.where(:id => @current_user.org.id).empty?
+      )
+    )
+
+    unless is_authorised
+      render :status => 400
+      return 
+    end
+
     render json: @job
   end
 
@@ -120,9 +135,7 @@ class JobsController < ApplicationController
 			  @e_type = EmploymentType.find_by(name: employment_type)
         logger.debug "@e_type.name"
         logger.debug @e_type.name
-        @j_e_t = JobEmploymentType.new()
-        @j_e_t.job = @job
-        @j_e_t.employment_type = @e_type
+        @j_e_t = JobEmployementType.find_or_initialize_by(:job => @job, :employment_type => @e_type)
         unless @j_e_t.save
           render json: @j_e_t.errors, status: :unprocessable_entity
           return false
@@ -149,7 +162,7 @@ class JobsController < ApplicationController
           return false
         end
 
-        @job_period = JobPeriod.new(job: @job, period: @period)
+        @job_period = JobPeriod.find_or_initialize_by(job: @job, period: @period)
         unless @job_period.save
           render json: @job_period.errors, status: :unprocessable_entity
           return false
@@ -172,7 +185,7 @@ class JobsController < ApplicationController
           return false
         end
 
-        @jl = JobLocation.create(:job => @job, :location => @location)
+        @jl = JobLocation.find_or_initialize_by(:job => @job, :location => @location)
         unless @jl.save
           location_arr.each do |l| l.destroy end
           render json: @jl.errors, status: :unprocessable_entity
@@ -193,7 +206,7 @@ class JobsController < ApplicationController
           return false
         end
         
-        @job_lang = JobLang.new(:lang => @lang, :job => @job)
+        @job_lang = JobLang.find_or_initialize_by(:lang => @lang, :job => @job)
         if @job_lang.save
           job_lang_arr << @job_lang
         else
