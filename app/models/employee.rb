@@ -6,7 +6,7 @@ class Employee < ApplicationRecord
   has_many :ratings, as: :ratable, dependent: :destroy
   has_many :scores, as: :scorable, dependent: :destroy
 
-  has_many :logs
+  has_many :logs, dependent: :nullify
 
   validates :name, :email, :presence => true
 
