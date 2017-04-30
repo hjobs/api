@@ -5,8 +5,8 @@ class EmployeeSerializer < ActiveModel::Serializer
               :description,
               :first_name,
               :last_name,
-              :pic_hd,
-              :pic_sm,
+              :image,
+              :phone,
               :auth_token
 
   has_many :jobs

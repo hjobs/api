@@ -1,4 +1,5 @@
 class EmployeesController < ApplicationController
+  skip_before_action :authenticate_request, only: :create
   before_action :set_employee, only: [:show, :update, :destroy]
 
   # GET /employees
@@ -21,17 +22,34 @@ class EmployeesController < ApplicationController
   end
 
   # POST /employees
-  # def create
-  #   @employee = Employee.new(employee_params)
+  def create
+    @employee = Employee.find_by(:email => params[:employee][:email])
 
-  #   if @employee.save
-  #     render json: @employee, status: :created, location: @employee
-  #   else
-  #     render json: @employee.errors, status: :unprocessable_entity
-  #   end
-  # end
+    unless !@employee
+      logger.debug "User already exists"
+      logger.debug @employee
+      render json: {:error => "User already exists"}, status: :unprocessable_entity
+      return
+    end
 
-  # PATCH/PUT /employees/1
+    @employee = Employee.new(employee_params)
+
+    if @employee.save
+      @command = AuthenticateUser.call(@iam, params[:employee][:email], params[:employee][:password])
+      if @command.success?
+        render json: {
+          :employee => EmployeeSerializer.new(@employee),
+          :auth_token => @command.result
+        }, status: :created
+      else
+        render json: @command.errors, status: :unprocessable_entity
+      end
+    else
+      render json: @employee.errors, status: :unprocessable_entity
+    end
+  end
+
+  # PATCH /employees/1
   def update
     if @employee.update(employee_params)
       render json: @employee
@@ -53,6 +71,6 @@ class EmployeesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def employee_params
-      params.require(:employee).permit(:email, :password, :name, :description, :country)
+      params.require(:employee).permit(:email, :password, :name, :description, :first_name, :last_name, :image)
     end
 end

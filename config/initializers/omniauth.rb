@@ -7,9 +7,11 @@ Rails.application.config.middleware.use OmniAuth::Builder do
     :scope => "userinfo.email,userinfo.profile",
     :prompt => "select_account",
     :image_aspect_ratio => "square",
-    :image_size => 50
+    :image_size => 200
   }
-  provider :facebook, ENV['FACEBOOK_KEY'], ENV['FACEBOOK_SECRET']
+  provider :facebook, ENV['FACEBOOK_KEY'], ENV['FACEBOOK_SECRET'], {
+    :image_size => "large"
+  }
   provider :linkedin, ENV['LINKEDIN_KEY'], ENV['LINKEDIN_SECRET']
   
 end

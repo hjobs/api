@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170417115129) do
+ActiveRecord::Schema.define(version: 20170430081220) do
 
-  create_table "ads", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "ads", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.string   "link"
     t.string   "image"
     t.string   "title"
@@ -25,7 +25,7 @@ ActiveRecord::Schema.define(version: 20170417115129) do
     t.index ["org_id"], name: "index_ads_on_org_id", using: :btree
   end
 
-  create_table "auths", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "auths", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.string   "provider"
     t.string   "uid"
     t.string   "authable_type"
@@ -35,7 +35,7 @@ ActiveRecord::Schema.define(version: 20170417115129) do
     t.index ["authable_type", "authable_id"], name: "index_auths_on_authable_type_and_authable_id", using: :btree
   end
 
-  create_table "employee_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "employee_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "status",      limit: 255
     t.text     "message",     limit: 65535
     t.integer  "job_id"
@@ -46,19 +46,20 @@ ActiveRecord::Schema.define(version: 20170417115129) do
     t.index ["job_id"], name: "index_employee_jobs_on_job_id", using: :btree
   end
 
-  create_table "employees", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
-    t.string   "email",       limit: 255
-    t.string   "name",        limit: 255
-    t.text     "description", limit: 65535
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
-    t.string   "pic_hd"
-    t.string   "pic_sm"
+  create_table "employees", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "email",           limit: 255
+    t.string   "name",            limit: 255
+    t.text     "description",     limit: 65535
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
     t.string   "first_name"
     t.string   "last_name"
+    t.string   "password_digest"
+    t.string   "image"
+    t.string   "phone"
   end
 
-  create_table "employer_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "employer_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "employer_id"
     t.integer  "job_id"
     t.datetime "created_at",  null: false
@@ -67,7 +68,7 @@ ActiveRecord::Schema.define(version: 20170417115129) do
     t.index ["job_id"], name: "index_employer_jobs_on_job_id", using: :btree
   end
 
-  create_table "employers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "employers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "email",           limit: 255
     t.string   "password_digest", limit: 255
     t.string   "name",            limit: 255
@@ -79,13 +80,13 @@ ActiveRecord::Schema.define(version: 20170417115129) do
     t.index ["org_id"], name: "index_employers_on_org_id", using: :btree
   end
 
-  create_table "employment_types", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "employment_types", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name",       limit: 255
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
   end
 
-  create_table "job_employment_types", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "job_employment_types", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "job_id"
     t.integer  "employment_type_id"
     t.datetime "created_at",         null: false
@@ -94,7 +95,7 @@ ActiveRecord::Schema.define(version: 20170417115129) do
     t.index ["job_id"], name: "index_job_employment_types_on_job_id", using: :btree
   end
 
-  create_table "job_langs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "job_langs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.integer  "job_id"
     t.integer  "lang_id"
     t.datetime "created_at", null: false
@@ -103,7 +104,7 @@ ActiveRecord::Schema.define(version: 20170417115129) do
     t.index ["lang_id"], name: "index_job_langs_on_lang_id", using: :btree
   end
 
-  create_table "job_locations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "job_locations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "job_id"
     t.integer  "location_id"
     t.datetime "created_at",  null: false
@@ -112,7 +113,7 @@ ActiveRecord::Schema.define(version: 20170417115129) do
     t.index ["location_id"], name: "index_job_locations_on_location_id", using: :btree
   end
 
-  create_table "job_periods", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "job_periods", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "job_id"
     t.integer  "period_id"
     t.datetime "created_at", null: false
@@ -121,7 +122,7 @@ ActiveRecord::Schema.define(version: 20170417115129) do
     t.index ["period_id"], name: "index_job_periods_on_period_id", using: :btree
   end
 
-  create_table "job_types", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "job_types", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -129,7 +130,7 @@ ActiveRecord::Schema.define(version: 20170417115129) do
 
   create_table "jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "title",          limit: 255
-    t.text     "description",    limit: 16777215
+    t.text     "description",    limit: 65535
     t.datetime "deadline"
     t.string   "salary_type",    limit: 255
     t.text     "salary_value",   limit: 65535
@@ -137,21 +138,21 @@ ActiveRecord::Schema.define(version: 20170417115129) do
     t.integer  "salary_low"
     t.string   "salary_unit",    limit: 255
     t.string   "position",       limit: 255
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
     t.string   "attachment_url", limit: 255
     t.integer  "job_type"
     t.string   "event"
   end
 
-  create_table "langs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "langs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.string   "name"
     t.string   "country"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "locations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "locations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "country",    limit: 255
     t.string   "region",     limit: 255
     t.string   "city",       limit: 255
@@ -161,7 +162,7 @@ ActiveRecord::Schema.define(version: 20170417115129) do
     t.datetime "updated_at",             null: false
   end
 
-  create_table "logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name",        limit: 255
     t.string   "action",      limit: 255
     t.integer  "job_id"
@@ -181,7 +182,7 @@ ActiveRecord::Schema.define(version: 20170417115129) do
     t.index ["org_id"], name: "index_logs_on_org_id", using: :btree
   end
 
-  create_table "org_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "org_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "org_id"
     t.integer  "job_id"
     t.datetime "created_at", null: false
@@ -190,7 +191,7 @@ ActiveRecord::Schema.define(version: 20170417115129) do
     t.index ["org_id"], name: "index_org_jobs_on_org_id", using: :btree
   end
 
-  create_table "orgs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "orgs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name",        limit: 255
     t.text     "description", limit: 65535
     t.string   "country",     limit: 255
@@ -203,7 +204,7 @@ ActiveRecord::Schema.define(version: 20170417115129) do
     t.index ["email"], name: "index_orgs_on_email", using: :btree
   end
 
-  create_table "periods", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "periods", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.datetime "start_time"
     t.datetime "end_time"
     t.date     "date"
@@ -211,7 +212,7 @@ ActiveRecord::Schema.define(version: 20170417115129) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "ratings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "ratings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.integer  "name"
     t.integer  "value"
     t.string   "ratable_type"
@@ -221,7 +222,7 @@ ActiveRecord::Schema.define(version: 20170417115129) do
     t.index ["ratable_type", "ratable_id"], name: "index_ratings_on_ratable_type_and_ratable_id", using: :btree
   end
 
-  create_table "scores", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "scores", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.integer  "name"
     t.integer  "value"
     t.string   "scorable_type"

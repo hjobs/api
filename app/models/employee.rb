@@ -1,4 +1,5 @@
 class Employee < ApplicationRecord
+  has_secure_password :validations => false
   has_many :auths, as: :authable, dependent: :destroy
   has_many :employee_jobs
   has_many :jobs, through: :employee_jobs
@@ -7,6 +8,8 @@ class Employee < ApplicationRecord
   has_many :scores, as: :scorable, dependent: :destroy
 
   has_many :logs, dependent: :nullify
+
+  # accepts_nested_attributes_for :phones
 
   validates :name, :email, :presence => true
 
@@ -19,6 +22,22 @@ class Employee < ApplicationRecord
         :uid => auth_hash["uid"]
       )
     end
+  end
+
+  def self.create_from_auth_hash(auth_hash)
+    image = auth_hash["info"]["image"] || (
+      "https://dummyimage.com/250/EEE/111.png?text=" + (
+        auth_hash["info"]["first_name"] || auth_hash["info"]["name"]
+      )
+    )
+    e = create(
+      :name => auth_hash["info"]["name"],
+      :email => auth_hash["info"]["email"],
+      :first_name => auth_hash["info"]["first_name"],
+      :last_name => auth_hash["info"]["last_name"],
+      :image => image,
+      :phone => auth_hash["info"]["phone"]
+    )
   end
 
 end
