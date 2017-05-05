@@ -54,6 +54,7 @@ class EmployeesController < ApplicationController
     if @employee.update(employee_params)
       render json: @employee
     else
+      logger.debug @employee.errors
       render json: @employee.errors, status: :unprocessable_entity
     end
   end
