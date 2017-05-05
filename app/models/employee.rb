@@ -1,6 +1,6 @@
 class Employee < ApplicationRecord
   has_secure_password :validations => false
-  belongs_to :location
+  belongs_to :location, :optional => true
   has_many :auths, as: :authable, dependent: :destroy
   has_many :employee_jobs
   has_many :jobs, through: :employee_jobs
