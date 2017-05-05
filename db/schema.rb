@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170430081220) do
+ActiveRecord::Schema.define(version: 20170505045911) do
 
   create_table "ads", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.string   "link"
@@ -57,6 +57,8 @@ ActiveRecord::Schema.define(version: 20170430081220) do
     t.string   "password_digest"
     t.string   "image"
     t.string   "phone"
+    t.integer  "location_id"
+    t.index ["location_id"], name: "index_employees_on_location_id", using: :btree
   end
 
   create_table "employer_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -84,6 +86,23 @@ ActiveRecord::Schema.define(version: 20170430081220) do
     t.string   "name",       limit: 255
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+  end
+
+  create_table "experiences", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
+    t.string   "position"
+    t.text     "description",  limit: 65535
+    t.string   "company_name"
+    t.integer  "org_id"
+    t.boolean  "working"
+    t.date     "time_start"
+    t.date     "time_end"
+    t.integer  "location_id"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.integer  "employee_id"
+    t.index ["employee_id"], name: "index_experiences_on_employee_id", using: :btree
+    t.index ["location_id"], name: "index_experiences_on_location_id", using: :btree
+    t.index ["org_id"], name: "index_experiences_on_org_id", using: :btree
   end
 
   create_table "job_employment_types", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -145,11 +164,23 @@ ActiveRecord::Schema.define(version: 20170430081220) do
     t.string   "event"
   end
 
+  create_table "lang_qs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
+    t.integer  "lang_id"
+    t.integer  "employee_id"
+    t.integer  "level"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["employee_id"], name: "index_lang_qs_on_employee_id", using: :btree
+    t.index ["lang_id"], name: "index_lang_qs_on_lang_id", using: :btree
+  end
+
   create_table "langs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.string   "name"
     t.string   "country"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.string   "native_name"
+    t.string   "code"
   end
 
   create_table "locations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -158,8 +189,11 @@ ActiveRecord::Schema.define(version: 20170430081220) do
     t.string   "city",       limit: 255
     t.string   "district",   limit: 255
     t.string   "address",    limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
+    t.decimal  "lat",                    precision: 10, scale: 6
+    t.decimal  "lng",                    precision: 10, scale: 6
+    t.string   "street"
   end
 
   create_table "logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -212,6 +246,15 @@ ActiveRecord::Schema.define(version: 20170430081220) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "profile_viewers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
+    t.integer  "org_id"
+    t.integer  "employee_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["employee_id"], name: "index_profile_viewers_on_employee_id", using: :btree
+    t.index ["org_id"], name: "index_profile_viewers_on_org_id", using: :btree
+  end
+
   create_table "ratings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.integer  "name"
     t.integer  "value"
@@ -236,9 +279,13 @@ ActiveRecord::Schema.define(version: 20170430081220) do
   add_foreign_key "ads", "orgs"
   add_foreign_key "employee_jobs", "employees"
   add_foreign_key "employee_jobs", "jobs"
+  add_foreign_key "employees", "locations"
   add_foreign_key "employer_jobs", "employers"
   add_foreign_key "employer_jobs", "jobs"
   add_foreign_key "employers", "orgs"
+  add_foreign_key "experiences", "employees"
+  add_foreign_key "experiences", "locations"
+  add_foreign_key "experiences", "orgs"
   add_foreign_key "job_employment_types", "employment_types"
   add_foreign_key "job_employment_types", "jobs"
   add_foreign_key "job_langs", "jobs"
@@ -247,6 +294,8 @@ ActiveRecord::Schema.define(version: 20170430081220) do
   add_foreign_key "job_locations", "locations"
   add_foreign_key "job_periods", "jobs"
   add_foreign_key "job_periods", "periods"
+  add_foreign_key "lang_qs", "employees"
+  add_foreign_key "lang_qs", "langs"
   add_foreign_key "logs", "employees"
   add_foreign_key "logs", "employers"
   add_foreign_key "logs", "job_types"
@@ -254,4 +303,6 @@ ActiveRecord::Schema.define(version: 20170430081220) do
   add_foreign_key "logs", "orgs"
   add_foreign_key "org_jobs", "jobs"
   add_foreign_key "org_jobs", "orgs"
+  add_foreign_key "profile_viewers", "employees"
+  add_foreign_key "profile_viewers", "orgs"
 end

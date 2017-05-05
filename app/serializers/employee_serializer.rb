@@ -1,5 +1,5 @@
 class EmployeeSerializer < ActiveModel::Serializer
-  attributes :id,
+  attributes  :id,
               :email,
               :name,
               :description,
@@ -12,6 +12,8 @@ class EmployeeSerializer < ActiveModel::Serializer
   has_many :jobs
   has_many :ratings
   has_many :scores
+  has_many :lang_qs
+  has_one :location
 
   def auth_token
     return @instance_options[:auth_token] || nil

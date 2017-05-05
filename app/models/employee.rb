@@ -1,8 +1,12 @@
 class Employee < ApplicationRecord
   has_secure_password :validations => false
+  belongs_to :location
   has_many :auths, as: :authable, dependent: :destroy
   has_many :employee_jobs
   has_many :jobs, through: :employee_jobs
+  has_many :experiences
+  has_many :lang_qs, :dependent => :destroy
+  has_many :langs, through: :lang_qs
 
   has_many :ratings, as: :ratable, dependent: :destroy
   has_many :scores, as: :scorable, dependent: :destroy
