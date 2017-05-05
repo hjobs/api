@@ -6,7 +6,8 @@ class EmployeeSerializer < ActiveModel::Serializer
   has_one :employee
 
   def language
-    object.lang&.name || nil
+    object.lang&.name || nil if !!object
+    nil
   end
 
 end
