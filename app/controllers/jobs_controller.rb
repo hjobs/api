@@ -201,7 +201,7 @@ class JobsController < ApplicationController
       params[:job][:langs] ||= []
       params[:job][:langs].each do |lang|
         logger.debug lang
-        @lang = Lang.find_by(:name => lang)
+        @lang = Lang.find_by_code(lang)
         unless @lang
           render json: {error: "no language found from parameters"}
           return false
