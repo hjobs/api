@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170505045911) do
+ActiveRecord::Schema.define(version: 20170509132617) do
 
   create_table "ads", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.string   "link"
@@ -58,6 +58,7 @@ ActiveRecord::Schema.define(version: 20170505045911) do
     t.string   "image"
     t.string   "phone"
     t.integer  "location_id"
+    t.string   "cv"
     t.index ["location_id"], name: "index_employees_on_location_id", using: :btree
   end
 
@@ -114,6 +115,23 @@ ActiveRecord::Schema.define(version: 20170505045911) do
     t.index ["job_id"], name: "index_job_employment_types_on_job_id", using: :btree
   end
 
+  create_table "job_exps", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
+    t.string   "position"
+    t.text     "description",  limit: 65535
+    t.integer  "employee_id"
+    t.integer  "location_id"
+    t.boolean  "working"
+    t.datetime "time_from"
+    t.datetime "time_to"
+    t.integer  "org_id"
+    t.string   "company_name"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.index ["employee_id"], name: "index_job_exps_on_employee_id", using: :btree
+    t.index ["location_id"], name: "index_job_exps_on_location_id", using: :btree
+    t.index ["org_id"], name: "index_job_exps_on_org_id", using: :btree
+  end
+
   create_table "job_langs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.integer  "job_id"
     t.integer  "lang_id"
@@ -162,6 +180,8 @@ ActiveRecord::Schema.define(version: 20170505045911) do
     t.string   "attachment_url", limit: 255
     t.integer  "job_type"
     t.string   "event"
+    t.boolean  "has_bonus"
+    t.string   "bonus_value"
   end
 
   create_table "lang_qs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
@@ -288,6 +308,9 @@ ActiveRecord::Schema.define(version: 20170505045911) do
   add_foreign_key "experiences", "orgs"
   add_foreign_key "job_employment_types", "employment_types"
   add_foreign_key "job_employment_types", "jobs"
+  add_foreign_key "job_exps", "employees"
+  add_foreign_key "job_exps", "locations"
+  add_foreign_key "job_exps", "orgs"
   add_foreign_key "job_langs", "jobs"
   add_foreign_key "job_langs", "langs"
   add_foreign_key "job_locations", "jobs"

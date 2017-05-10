@@ -24,8 +24,13 @@ class Job < ApplicationRecord
 
   has_many :logs, :dependent => :nullify
 
+  before_save :check
   default_scope { order(updated_at: :desc) }
   scope :by_job_type, -> job_type { where({job_type: job_type}) }
-  scope :after_today, -> val { left_outer_joins(:periods).where("periods.id IS NULL OR periods.date >= ?", Date.today).uniq }
+  scope :after_today, -> val { left_outer_joins(:periods).where("periods.id IS NULL OR periods.date >= ?", Date.today).distinct }
   scope :offset_by, -> num { limit(30).offset(num) }
+
+  def check
+    self.has_bonus = false if self.has_bonus.nil?
+  end
 end

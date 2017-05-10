@@ -7,6 +7,8 @@ class JobSerializer < ActiveModel::Serializer
               :salary_high,
               :salary_low,
               :salary_unit,
+              :has_bonus,
+              :bonus_value,
               :position,
               :created_at,
               :updated_at,

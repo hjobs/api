@@ -6,7 +6,7 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-# require_relative "seed_location"
+require_relative "seed_location"
 
 JobType.find_or_create_by(:id => 0, :name => "quick")
 JobType.find_or_create_by(:id => 1, :name => "stable")
@@ -15,7 +15,3 @@ JobType.find_or_create_by(:id => 3, :name => "project")
 
 EmploymentType.find_or_create_by(:name => "fulltime")
 EmploymentType.find_or_create_by(:name => "parttime")
-
-Lang.find_or_create_by(:name => "english")
-Lang.find_or_create_by(:name => "cantonese")
-Lang.find_or_create_by(:name => "mandarin")

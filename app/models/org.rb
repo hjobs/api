@@ -3,6 +3,8 @@ class Org < ApplicationRecord
   
   has_many :org_jobs, dependent: :destroy
   has_many :jobs, through: :org_jobs
+  has_many :job_exps, :dependent => :nullify
+
 
   has_many :logs, dependent: :nullify
 

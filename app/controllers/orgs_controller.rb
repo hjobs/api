@@ -17,10 +17,10 @@ class OrgsController < ApplicationController
   # GET /orgs/showPostings
   def show_postings
     @org = @current_user.org
-    @jobs = @org.jobs.left_outer_joins(:periods).where("periods.id IS NULL OR periods.date >= :today", :today => Date.today).uniq
+    @jobs = @org.jobs.left_outer_joins(:periods).where("periods.id IS NULL OR periods.date >= :today", :today => Date.today).distinct
     @jobs_json = ActiveModel::SerializableResource.new(
       @jobs,
-      each_serializer: ActiveModel::Serializer::JobSerializer
+      each_serializer: JobSerializer
     )
     # @quick_jobs = sort(@jobs.where(:job_type => :quick))
     # @stable_jobs = sort(@jobs.where(:job_type => :stable))

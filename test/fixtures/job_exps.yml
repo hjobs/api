@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  position: MyString
+  description: MyText
+  employer: one
+  location: one
+  working: false
+  time_from: 2017-05-07 15:50:43
+  time_to: 2017-05-07 15:50:43
+  org: one
+  company_name: MyString
+
+two:
+  position: MyString
+  description: MyText
+  employer: two
+  location: two
+  working: false
+  time_from: 2017-05-07 15:50:43
+  time_to: 2017-05-07 15:50:43
+  org: two
+  company_name: MyString

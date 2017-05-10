@@ -7,6 +7,7 @@ class Employee < ApplicationRecord
   has_many :experiences
   has_many :lang_qs, :dependent => :destroy
   has_many :langs, through: :lang_qs
+  has_many :job_exps, :dependent => :nullify
 
   has_many :ratings, as: :ratable, dependent: :destroy
   has_many :scores, as: :scorable, dependent: :destroy

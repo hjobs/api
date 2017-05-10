@@ -122,9 +122,10 @@ class JobsController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def job_params
       params.require(:job).permit(
-        :title, :description, :deadline, :job_type, :event,
+        :id, :title, :description, :deadline, :job_type, :event,
         :salary_type, :salary_value, :salary_high, :salary_low, :salary_unit,
-        :position, :attachment_url, :employment_types, :periods, :locations)
+        :position, :attachment_url, :employment_types, :periods, :locations,
+        :has_bonus, :bonus_value)
     end
 
     def add_employment_types

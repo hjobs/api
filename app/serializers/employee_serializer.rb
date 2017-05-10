@@ -6,10 +6,12 @@ class EmployeeSerializer < ActiveModel::Serializer
               :first_name,
               :last_name,
               :image,
+              :cv,
               :phone,
               :auth_token
 
   has_many :jobs
+  has_many :job_exps
   has_many :ratings
   has_many :scores
   has_many :lang_qs

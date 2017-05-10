@@ -1,13 +1,12 @@
-class EmployeeSerializer < ActiveModel::Serializer
-  attributes  :language,
+class LangQSerializer < ActiveModel::Serializer
+  attributes  :id,
+              :lang_code,
               :level
-              
-
-  has_one :employee
-
-  def language
-    object.lang&.name || nil if !!object
-    nil
+              # :created_at,
+              # :updated_at
+  
+  def lang_code
+    object.lang&.code || nil
   end
 
 end
