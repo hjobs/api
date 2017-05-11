@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::API
-  before_action :authenticate_request, :set_global_variables, :get_current_user
+  before_action :authenticate_request, :get_current_user, :set_global_variables
   attr_reader :current_user, :iam
 
   def set_global_variables

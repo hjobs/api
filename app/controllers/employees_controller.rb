@@ -11,11 +11,27 @@ class EmployeesController < ApplicationController
 
   # GET /employees/1
   def show
-    render json: @employee
+    if @iam == "employee"
+      render json: @employee
+    elsif @iam == "employer"
+      has_permission = false
+      @employee.jobs.each do |j|
+        has_permission = true if j.org == @employee.org
+      end
+      if has_permission
+        render json: @employee
+      else
+        render status: :unauthorized
+      end
+    end
   end
 
   # GET /get_employee/
   def get_employee
+    if @iam == "employer"
+      render status: :unauthorized
+      return
+    end
     is_employee = params[:iam] == 'employee' && @current_user == Employee.find(@current_user.id)
     logger.debug "is_employee"
     logger.debug is_employee == true

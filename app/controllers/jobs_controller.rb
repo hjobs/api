@@ -15,29 +15,6 @@ class JobsController < ApplicationController
     }
   end
 
-  # def show_job_type
-  #   job_type = Job.job_types[params[:job_type]]
-  #   # logger.debug "job_type = "
-  #   # logger.debug job_type
-  #   @jobs = Job.all.after_today
-  #   # logger.debug "job_type = "
-  #   # logger.debug params[:job_type]
-  #   render json: sort(@jobs)
-  # end
-
-  # GET /jobs/get_picked
-  def get_picked
-    counts = 1
-    job_arr = []
-    Job.where(job_type: 'quick').sort_by {|x| x.updated_at}.reverse.each do |job|
-      job_arr << job if counts <= 3
-      counts += 1
-      break if counts > 3
-    end
-
-    render json: sort(job_arr)
-  end
-
   # GET /jobs/1
   def show
     job_poster = @job.employer
@@ -46,17 +23,22 @@ class JobsController < ApplicationController
       @iam == "employee" ||
       (
         job_poster == @current_user ||
-        !@job.orgs.where(:id => @current_user.org.id).empty?
+        @jobs.orgs.include?(@current_user.org)
       )
     )
 
     unless is_authorised
-      render :status => 400
+      render status: :unauthorized
       return 
     end
 
     render json: @job
   end
+
+  # # GET /jobs/adminView/:id
+  # def admin_view
+    
+  # end
 
   # POST /jobs
   def create

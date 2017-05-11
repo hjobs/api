@@ -10,13 +10,13 @@ Rails.application.routes.draw do
   get 'signout', to: 'sessions#destroy', as: 'signout'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   scope '/:iam' do
-    match '/authenticate' => 'authentication#authenticate', via: :post
-    match "/apply" => "job_applications#apply", via: :post
-    get '/orgs/showPostings' => 'orgs#show_postings'
-    get '/orgs/whoAreWe' => 'orgs#who_are_we'
-    get '/jobs/job_type/:job_type' => 'jobs#show_job_type'
-    get '/jobs/get_picked' => 'jobs#get_picked'
-    get '/get_employee' => "employees#get_employee"
+    match '/authenticate' => 'authentication#authenticate', via: :post # web + admin
+    match "/apply" => "job_applications#apply", via: :post # web
+    get '/orgs/showPostings' => 'orgs#show_postings' # admin
+    get '/orgs/whoAreWe' => 'orgs#who_are_we' # admin
+    get '/jobs/job_type/:job_type' => 'jobs#show_job_type' # web
+    # get '/jobs/adminView/:id' => 'jobs#admin_view' # admin
+    get '/get_employee' => "employees#get_employee" # web
     resources :ads
     resources :logs
     resources :employee_jobs

@@ -22,18 +22,12 @@ class OrgsController < ApplicationController
       @jobs,
       each_serializer: JobSerializer
     )
-    # @quick_jobs = sort(@jobs.where(:job_type => :quick))
-    # @stable_jobs = sort(@jobs.where(:job_type => :stable))
-    # @interns = sort(@jobs.where(:job_type => :intern))
-    # @projects = sort(@jobs.where(:job_type => :project))
     render :json => {
       :me => @current_user.as_json,
       :org => @org.as_json,
       :jobs => @jobs_json
+      # @quick_jobs = sort(@jobs.where(:job_type => :quick))
       # :quick_jobs => @quick_jobs.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, :orgs, :locations, :periods, :langs] )},
-      # :stable_jobs => @stable_jobs.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, :orgs, :locations, :periods, :langs] )},
-      # :interns => @interns.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, :orgs, :locations, :periods, :langs] )},
-      # :projects => @projects.collect{ |job| job.as_json(:include => [ {:employment_types => {:only => [:name]}}, :orgs, :locations, :periods, :langs] )}
     }
   end
 
