@@ -23,7 +23,7 @@ class JobsController < ApplicationController
       @iam == "employee" ||
       (
         job_poster == @current_user ||
-        @jobs.orgs.include?(@current_user.org)
+        @job.orgs.include?(@current_user.org)
       )
     )
 
