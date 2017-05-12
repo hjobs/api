@@ -54,7 +54,7 @@ class OrgsController < ApplicationController
       if @employer.save && @org.save
         @command = AuthenticateUser.call('employer', @employer.email, @employer.password)
         if @command.success?
-          render json: {employer: @employer, org: @org, auth_token: @command.result }, status: :created
+          render json: {me: @employer, org: @org, employers: @org.employers, auth_token: @command.result }, status: :created
         else
           @employer.destroy
           @org.destroy
