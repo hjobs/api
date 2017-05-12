@@ -33,7 +33,8 @@ class SessionsController < ApplicationController
     url = "http://localhost:3000" if !url
     query_prefix = url.include?('?') ? "&" : "?"
     applying = url.include?('job=') ? "&applying=true" : ""
-    url += query_prefix + "user={" + EmployeeSerializer.new(@user).to_hash.to_query + "}&auth_token=" + @command.result + applying
+    employee_string = EmployeeSerializer.new(@user).to_json.gsub!("#", "%23")
+    url += query_prefix + "user=" + employee_string + "&auth_token=" + @command.result + applying
     redirect_to url
 
     logger.debug auth_hash[:info]
