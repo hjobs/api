@@ -1,4 +1,4 @@
-gclass SessionsController < ApplicationController
+class SessionsController < ApplicationController
   skip_before_action :authenticate_request
 
   def new
