@@ -34,6 +34,8 @@ class SessionsController < ApplicationController
     query_prefix = url.include?('?') ? "&" : "?"
     applying = url.include?('job=') ? "&applying=true" : ""
     employee_string = EmployeeSerializer.new(@user).to_json.gsub!("#", "%23")
+    logger.debug "employee_string"
+    logger.debug employee_string
     url += query_prefix + "user=" + employee_string + "&auth_token=" + @command.result + applying
     redirect_to url
 
