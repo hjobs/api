@@ -7,7 +7,7 @@ run Rails.application
 require 'rack/cors'
 use Rack::Cors do
   allow do
-    origins ENV["RAILS_ENV"] == "production" ? 'https://www.hjobs.hk' : 'https://webserver.hjobs.hk'
+    origins ENV["RAILS_ENV"] == "production" ? 'https://www.hjobs.hk' : %w(https://webserver.hjobs.hk http://localhost:3000)
     resource '*',
         :headers => :any,
         :methods => [:get, :post, :delete, :put, :options, :patch]
