@@ -4,4 +4,5 @@ class Log < ApplicationRecord
   belongs_to :employer, :optional => true
   belongs_to :org, :optional => true
   belongs_to :job_type, :optional => true
+  belongs_to :ad, :optional => true
 end

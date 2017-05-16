@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170509132617) do
+ActiveRecord::Schema.define(version: 20170516034608) do
 
   create_table "ads", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.string   "link"
@@ -229,6 +229,8 @@ ActiveRecord::Schema.define(version: 20170509132617) do
     t.string   "component"
     t.string   "page"
     t.string   "target"
+    t.integer  "ad_id"
+    t.index ["ad_id"], name: "index_logs_on_ad_id", using: :btree
     t.index ["employee_id"], name: "index_logs_on_employee_id", using: :btree
     t.index ["employer_id"], name: "index_logs_on_employer_id", using: :btree
     t.index ["job_id"], name: "index_logs_on_job_id", using: :btree
@@ -319,6 +321,7 @@ ActiveRecord::Schema.define(version: 20170509132617) do
   add_foreign_key "job_periods", "periods"
   add_foreign_key "lang_qs", "employees"
   add_foreign_key "lang_qs", "langs"
+  add_foreign_key "logs", "ads"
   add_foreign_key "logs", "employees"
   add_foreign_key "logs", "employers"
   add_foreign_key "logs", "job_types"
