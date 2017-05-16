@@ -5,4 +5,5 @@ class LogSerializer < ActiveModel::Serializer
   has_one :employer
   has_one :org
   has_one :job_type
+  has_one :ad
 end
