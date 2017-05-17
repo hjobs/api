@@ -2,7 +2,7 @@ class Employee < ApplicationRecord
   has_secure_password :validations => false
   belongs_to :location, :optional => true
   has_many :auths, as: :authable, dependent: :destroy
-  has_many :employee_jobs
+  has_many :employee_jobs, dependent: :destroy
   has_many :jobs, through: :employee_jobs
   has_many :experiences
   has_many :lang_qs, :dependent => :destroy
