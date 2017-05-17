@@ -28,9 +28,9 @@ class MailgunSender < AuthenticationController
     end
 
     def get_email_body
-      ("Dear " + @org_names_string + ",\n\n" +
-      "I am interested in your posting " + @job.title + ". Please contact me at: " + @user_email + "\n\n" +
-      "Look forward to your speedy reply,\n" +
-      @user_name)
+      ("Hello " + @org_names_string + ",\n\n" +
+      @user_name + " has appied for your job with title: \"" + @job.title +
+      "\". Please see applicant details and updates of the job posting at https://admin.hjobs.hk.\n\n" +
+      "Cheers,\nHJobs")
     end
 end

@@ -8,11 +8,11 @@ class SessionsController < ApplicationController
     auth_hash = request.env['omniauth.auth']
     logger.debug "session"
     logger.debug session.to_json
-    if session[:user_id] && @user = Employee.find_by_id(session[:user_id])
-      # Means our user is signed in. Add the authorization to the user
-      @user.add_provider(auth_hash)
-      @command = OauthUser.call("employee", @user.id)
-    else
+    # if session[:user_id] && @user = Employee.find_by_id(session[:user_id])
+    #   # Means our user is signed in. Add the authorization to the user
+    #   @user.add_provider(auth_hash)
+    #   @command = OauthUser.call("employee", @user.id)
+    # else
       # Log him in or sign him up
       @auth = Auth.find_or_create(auth_hash)
       @user = @auth.authable
@@ -22,7 +22,7 @@ class SessionsController < ApplicationController
 
       # # Create the session
       # session[:user_id] = @user.id
-    end
+    # end
 
     unless @command.success?
       @auth.authable.destroy
@@ -31,7 +31,7 @@ class SessionsController < ApplicationController
     end
 
     url = request.env['omniauth.origin']
-    url = "http://localhost:3000" if !url
+    url = "https://www.hjobs.hk" if !url
     query_prefix = url.include?('?') ? "&" : "?"
     applying = url.include?('job=') ? "&applying=true" : ""
     employee_string = EmployeeSerializer.new(@user).to_json.gsub("#", "%23")
