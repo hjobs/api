@@ -6,7 +6,8 @@ class SessionsController < ApplicationController
 
   def create
     auth_hash = request.env['omniauth.auth']
-
+    logger.debug "session"
+    logger.debug session.to_json
     if session[:user_id] && @user = Employee.find_by_id(session[:user_id])
       # Means our user is signed in. Add the authorization to the user
       @user.add_provider(auth_hash)
@@ -19,8 +20,8 @@ class SessionsController < ApplicationController
       # Create JWT
       @command = OauthUser.call("employee", @auth.authable.id)
 
-      # Create the session
-      session[:user_id] = @auth.authable.id
+      # # Create the session
+      # session[:user_id] = @user.id
     end
 
     unless @command.success?
@@ -39,7 +40,7 @@ class SessionsController < ApplicationController
     url += query_prefix + "user=" + employee_string + "&auth_token=" + @command.result + applying
     redirect_to url
 
-    logger.debug auth_hash[:info]
+    logger.debug auth_hash
   end
 
   def failure
@@ -47,13 +48,16 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    user = Employee.find(session[:user_id])
-    user.active = false
-    if user.save
+    if !@current_user.respond_to?(:last_name) 
+      render status: :unauthorized
+      return
+    end
+    # user.active = false
+    if @current_user
       session[:user_id] = nil
-      render :json => user
+      render :json => @current_user
     else
-      render :json => user.errors, status: :unprocessable_entity
+      render status: :unprocessable_entity
     end
   end
 end

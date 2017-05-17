@@ -16,7 +16,6 @@ class ApplicationController < ActionController::API
   def get_current_user
     @iam = params[:iam]
     @current_user = GetCurrentUser.call(request.headers, params[:iam]).result
-    logger.debug @current_user
   end
 
 end

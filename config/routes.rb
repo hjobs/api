@@ -7,11 +7,11 @@ Rails.application.routes.draw do
   get '/login', :to => 'sessions#new', :as => :login
   get 'auth/:provider/callback', to: 'sessions#create'
   get 'auth/failure', :to => 'sessions#failure'
-  get 'signout', to: 'sessions#destroy', as: 'signout'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   scope '/:iam' do
     match '/authenticate' => 'authentication#authenticate', via: :post # web + admin
     match "/apply" => "job_applications#apply", via: :post # web
+    get '/logout', to: 'sessions#destroy', as: 'signout' # web  
     get '/orgs/showPostings' => 'orgs#show_postings' # admin
     get '/orgs/whoAreWe' => 'orgs#who_are_we' # admin
     get '/jobs/job_type/:job_type' => 'jobs#show_job_type' # web

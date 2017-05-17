@@ -16,7 +16,7 @@ class EmployeesController < ApplicationController
     elsif @iam == "employer"
       has_permission = false
       @employee.jobs.each do |j|
-        has_permission = true if j.org == @employee.org
+        has_permission = true if j.orgs.include?(@current_user.org)
       end
       if has_permission
         render json: @employee
