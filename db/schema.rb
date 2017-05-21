@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170516034608) do
+ActiveRecord::Schema.define(version: 20170521033903) do
 
   create_table "ads", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.string   "link"
@@ -166,22 +166,23 @@ ActiveRecord::Schema.define(version: 20170516034608) do
   end
 
   create_table "jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string   "title",          limit: 255
-    t.text     "description",    limit: 65535
+    t.string   "title",            limit: 255
+    t.text     "description",      limit: 65535
     t.datetime "deadline"
-    t.string   "salary_type",    limit: 255
-    t.text     "salary_value",   limit: 65535
+    t.string   "salary_type",      limit: 255
+    t.text     "salary_value",     limit: 65535
     t.integer  "salary_high"
     t.integer  "salary_low"
-    t.string   "salary_unit",    limit: 255
-    t.string   "position",       limit: 255
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-    t.string   "attachment_url", limit: 255
+    t.string   "salary_unit",      limit: 255
+    t.string   "position",         limit: 255
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.string   "attachment_url",   limit: 255
     t.integer  "job_type"
     t.string   "event"
     t.boolean  "has_bonus"
     t.string   "bonus_value"
+    t.boolean  "default_location"
   end
 
   create_table "lang_qs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
@@ -245,6 +246,15 @@ ActiveRecord::Schema.define(version: 20170516034608) do
     t.datetime "updated_at", null: false
     t.index ["job_id"], name: "index_org_jobs_on_job_id", using: :btree
     t.index ["org_id"], name: "index_org_jobs_on_org_id", using: :btree
+  end
+
+  create_table "org_locations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
+    t.integer  "org_id"
+    t.integer  "location_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["location_id"], name: "index_org_locations_on_location_id", using: :btree
+    t.index ["org_id"], name: "index_org_locations_on_org_id", using: :btree
   end
 
   create_table "orgs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -329,6 +339,8 @@ ActiveRecord::Schema.define(version: 20170516034608) do
   add_foreign_key "logs", "orgs"
   add_foreign_key "org_jobs", "jobs"
   add_foreign_key "org_jobs", "orgs"
+  add_foreign_key "org_locations", "locations"
+  add_foreign_key "org_locations", "orgs"
   add_foreign_key "profile_viewers", "employees"
   add_foreign_key "profile_viewers", "orgs"
 end

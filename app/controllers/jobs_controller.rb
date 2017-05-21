@@ -10,7 +10,10 @@ class JobsController < ApplicationController
   def index
     @jobs = apply_scopes(Job)
     render json: {
-      :jobs => @jobs.collect{ |j| j.as_json(:include => [:employer, :orgs, :employees, :periods, :locations, :employment_types, :langs])},
+      :jobs => ActiveModel::SerializableResource.new(
+        @jobs,
+        each_serializer: JobSerializer
+      ),
       :total_count => @jobs.unscope(:offset, :limit).count
     }
   end
@@ -35,11 +38,6 @@ class JobsController < ApplicationController
     render json: @job
   end
 
-  # # GET /jobs/adminView/:id
-  # def admin_view
-    
-  # end
-
   # POST /jobs
   def create
     @job = Job.new(job_params)
@@ -53,17 +51,7 @@ class JobsController < ApplicationController
       @oj.org = @current_user.org
       @oj.job = @job
 
-      unless add_employment_types
-        @job.destroy
-        return
-      end
-
-      unless add_employment_types && add_locations && add_periods
-        @job.destroy
-        return
-      end
-
-      unless add_langs
+      unless add_employment_types && add_employment_types && set_locations && add_periods && add_langs
         @job.destroy
         return
       end
@@ -81,7 +69,7 @@ class JobsController < ApplicationController
 
   # PATCH/PUT /jobs/1
   def update
-    if @job.update(job_params)
+    if @job.update(job_params) && add_periods && add_langs && set_locations
       render json: @job
     else
       render json: @job.errors, status: :unprocessable_entity
@@ -106,8 +94,9 @@ class JobsController < ApplicationController
       params.require(:job).permit(
         :id, :title, :description, :deadline, :job_type, :event,
         :salary_type, :salary_value, :salary_high, :salary_low, :salary_unit,
-        :position, :attachment_url, :employment_types, :periods, :locations,
-        :has_bonus, :bonus_value)
+        :position, :attachment_url, :employment_types, :periods,
+        :default_location, :has_bonus, :bonus_value
+      )
     end
 
     def add_employment_types
@@ -128,9 +117,10 @@ class JobsController < ApplicationController
     end
 
     def add_periods
+      p_params = params.require(:job).permit(:periods => [[:date, :start_time, :end_time]])
+      logger.debug
       period_arr = []
-      params[:job][:periods] ||= []
-      params[:job][:periods].each do |period|
+      p_params[:periods].each do |period|
         logger.debug period
         p = {}
         p[:date] = Date.parse(period[:date]) if period[:date]
@@ -154,28 +144,36 @@ class JobsController < ApplicationController
       return true
     end
 
-    def add_locations
-      location_arr = []
-      params[:job][:locations] ||= []
-      params[:job][:locations].each do |location|
-        @location = Location.find_or_initialize_by(address: location[:address])
-        logger.debug @location
-        if @location.save
-          location_arr << @location
-        else
-          location_arr.each do |l| l.destroy end
-          render json: @location.errors, status: :unprocessable_entity
-          return false
-        end
+    def set_locations
+      l_params = params.require(:job).permit(:locations => [[:id, :address, :street, :country, :region, :city, :lat, :lng, :_destroy]])
+      # logger.debug "l_param.empty? || !l_param.key?(:location)"
+      return true if l_params.empty?
+      return true if params[:job][:default_location]
 
-        @jl = JobLocation.find_or_initialize_by(:job => @job, :location => @location)
-        unless @jl.save
-          location_arr.each do |l| l.destroy end
-          render json: @jl.errors, status: :unprocessable_entity
-          return false
+      l_params[:locations].each do |l_param|
+        if l_param[:_destroy] == true
+          l = Location.find_by_id(l_param[:id])
+          jl = JobLocation.find_by(:job => @job, :location => l)
+          unless l && jl && jl.destroy
+            render status: :unprocessable_entity
+            return false
+          end
+        else
+          l = Location.find_by(:lat => l_param[:lat], :lng => l_param[:lng])
+          l = Location.find_by(:street => l_param[:street]) if !l
+          l = Location.new(l_param) if !l
+          unless l.save
+            render json: l.errors, status: :unprocessable_entity
+            return false
+          end
+          jl = JobLocation.find_or_initialize_by(:location => l, :job => @job)
+          unless jl.save
+            render json: jl.errors, status: :unprocessable_entity
+            return false
+          end
         end
       end
-      return true
+      true
     end
 
     def add_langs

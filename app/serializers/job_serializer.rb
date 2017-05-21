@@ -15,6 +15,7 @@ class JobSerializer < ActiveModel::Serializer
               :attachment_url,
               :job_type,
               :event,
+              :default_location,
               :view_count,
               :applicants_count
 
