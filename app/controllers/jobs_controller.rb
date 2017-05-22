@@ -118,7 +118,7 @@ class JobsController < ApplicationController
 
     def add_periods
       p_params = params.require(:job).permit(:periods => [[:date, :start_time, :end_time]])
-      return true if p_params[:periods].empty?
+      return true if !p_params[:periods] || p_params[:periods].empty?
       period_arr = []
       p_params[:periods].each do |period|
         logger.debug period
