@@ -32,6 +32,6 @@ class Job < ApplicationRecord
 
   def check
     self.has_bonus = false if self.has_bonus.nil?
-    self.locations = self.orgs[0].locations if self.default_location
+    self.locations = self.employer.org.locations if self.default_location
   end
 end
