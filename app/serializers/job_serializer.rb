@@ -7,6 +7,7 @@ class JobSerializer < ActiveModel::Serializer
               :salary_high,
               :salary_low,
               :salary_unit,
+              :photo,
               :has_bonus,
               :bonus_value,
               :position,
@@ -33,5 +34,9 @@ class JobSerializer < ActiveModel::Serializer
 
   def applicants_count
     object.employee_jobs.count
+  end
+
+  def photo
+    object.photo.nil? || object.photo.empty? ? object.employer.org.logo : object.photo
   end
 end

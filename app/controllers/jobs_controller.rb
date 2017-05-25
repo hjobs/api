@@ -95,7 +95,7 @@ class JobsController < ApplicationController
         :id, :title, :description, :deadline, :job_type, :event,
         :salary_type, :salary_value, :salary_high, :salary_low, :salary_unit,
         :position, :attachment_url, :employment_types, :periods,
-        :default_location, :has_bonus, :bonus_value
+        :default_location, :has_bonus, :bonus_value, :photo
       )
     end
 

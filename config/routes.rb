@@ -26,7 +26,7 @@ Rails.application.routes.draw do
     resources :employees
     resources :scores
     resources :ratings
-    end
+  end
 
   
   
