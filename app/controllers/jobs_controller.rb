@@ -45,12 +45,8 @@ class JobsController < ApplicationController
 
     if @job.save
 
-      @oj = OrgJob.new()
-      logger.debug 'log current_user'
-      logger.debug @current_user.email
-      @oj.org = @current_user.org
-      @oj.job = @job
-
+      @oj = OrgJob.new(:org => @current_user.org, :job => @job)
+      
       unless add_employment_types && add_employment_types && set_locations && add_periods && add_langs
         @job.destroy
         return
