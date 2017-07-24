@@ -12,7 +12,7 @@ class MailgunSender < AuthenticationController
     @to_email_string = get_to_emails
     @text = get_email_body
     @subject = (@job.title + " - Hjobs.hk")
-    RestClient.post "https://api:key-fd356a2576890b2ab691c0b5064a09a3@api.mailgun.net/v3/hjobs.hk/messages",
+    RestClient.post "https://api:" + ENV["MAILGUNAPIKEY"] + "@api.mailgun.net/v3/hjobs.hk/messages",
       :from => "<application@hjobs.hk>",
       :to => @to_email_string,
       :subject => @subject,
