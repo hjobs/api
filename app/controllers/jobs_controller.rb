@@ -47,7 +47,7 @@ class JobsController < ApplicationController
 
       @oj = OrgJob.new(:org => @current_user.org, :job => @job)
       
-      unless add_employment_types && add_employment_types && set_locations && add_periods && add_langs
+      unless add_employment_types && set_locations && add_periods && add_langs
         @job.destroy
         return
       end
