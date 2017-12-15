@@ -27,6 +27,7 @@ class JobSerializer < ActiveModel::Serializer
   has_many :employment_types
   has_many :employees
   has_many :langs
+  has_many :tags
 
   def view_count
     object.logs.where(:name => "ViewJob").count

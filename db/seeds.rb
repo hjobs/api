@@ -7,6 +7,7 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 require_relative "seed_language"
+require_relative "seed_tag"
 
 JobType.find_or_create_by(:id => 0, :name => "quick")
 JobType.find_or_create_by(:id => 1, :name => "stable")

@@ -2,8 +2,11 @@ class JobsController < ApplicationController
   skip_before_action :authenticate_request, only: [:index, :show, :index, :show_job_type, :get_picked]
   before_action :set_job, only: [:show, :update, :destroy]
 
-  has_scope :by_job_type, allow_blank: true, default: "quick"
   has_scope :after_today, allow_blank: true, default: true
+  has_scope :by_job_type, allow_blank: true, default: "quick"
+  has_scope :filter, type: :array, allow_blank: true, default: nil do |controller, scope, value|
+    (value.present? && val.is_a?(Array) && !value.empty?) ? scope.filter(value) : scope
+  end
   has_scope :offset_by, allow_blank: true, default: 0
 
   # GET /jobs
@@ -47,7 +50,7 @@ class JobsController < ApplicationController
 
       @oj = OrgJob.new(:org => @current_user.org, :job => @job)
       
-      unless add_employment_types && set_locations && add_periods && add_langs
+      unless add_employment_types && set_locations && set_periods && set_langs && set_job_tags
         @job.destroy
         return
       end
@@ -65,7 +68,7 @@ class JobsController < ApplicationController
 
   # PATCH/PUT /jobs/1
   def update
-    if @job.update(job_params) && add_periods && add_langs && set_locations
+    if @job.update(job_params) && set_periods && set_langs && set_locations && set_job_tags
       render json: @job
     else
       render json: @job.errors, status: :unprocessable_entity
@@ -112,7 +115,7 @@ class JobsController < ApplicationController
       return true
     end
 
-    def add_periods
+    def set_periods
       p_params = params.require(:job).permit(:periods => [[:date, :start_time, :end_time]])
       return true if !p_params[:periods] || p_params[:periods].empty?
       period_arr = []
@@ -172,7 +175,7 @@ class JobsController < ApplicationController
       true
     end
 
-    def add_langs
+    def set_langs
       job_lang_arr = []
       params[:job][:langs] ||= []
       params[:job][:langs].each do |lang|
@@ -189,6 +192,24 @@ class JobsController < ApplicationController
         else
           job_lang_arr.each do |job_lang| job_lang.destroy end
           render json: @job_lang.errors, status: :unprocessable_entity
+          return false
+        end
+      end
+      return true
+    end
+
+    def set_job_tags
+      logger.debug "inside set_job_tags"
+      params[:job][:tags] ||= []
+      params[:job][:tags].each do |t|
+        logger.debug "t = "
+        logger.debug t
+        tag = Tag.find_by(:code => t.code)
+        logger.debug "tag found with code = "
+        logger.debug tag.code
+        @job_tag = JobTag.find_or_initialize_by(:job => @job, :tag => @tag)
+        unless @job_tag.save
+          render json: @job_tag.errors, status: :unprocessable_entity
           return false
         end
       end

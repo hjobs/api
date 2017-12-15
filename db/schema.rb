@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170525065044) do
+ActiveRecord::Schema.define(version: 20171214081336) do
 
   create_table "ads", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.string   "link"
@@ -157,6 +157,15 @@ ActiveRecord::Schema.define(version: 20170525065044) do
     t.datetime "updated_at", null: false
     t.index ["job_id"], name: "index_job_periods_on_job_id", using: :btree
     t.index ["period_id"], name: "index_job_periods_on_period_id", using: :btree
+  end
+
+  create_table "job_tags", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
+    t.integer  "tag_id"
+    t.integer  "job_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["job_id"], name: "index_job_tags_on_job_id", using: :btree
+    t.index ["tag_id"], name: "index_job_tags_on_tag_id", using: :btree
   end
 
   create_table "job_types", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -308,6 +317,13 @@ ActiveRecord::Schema.define(version: 20170525065044) do
     t.index ["scorable_type", "scorable_id"], name: "index_scores_on_scorable_type_and_scorable_id", using: :btree
   end
 
+  create_table "tags", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
+    t.string   "code"
+    t.integer  "type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "ads", "employers"
   add_foreign_key "ads", "orgs"
   add_foreign_key "employee_jobs", "employees"
@@ -330,6 +346,8 @@ ActiveRecord::Schema.define(version: 20170525065044) do
   add_foreign_key "job_locations", "locations"
   add_foreign_key "job_periods", "jobs"
   add_foreign_key "job_periods", "periods"
+  add_foreign_key "job_tags", "jobs"
+  add_foreign_key "job_tags", "tags"
   add_foreign_key "lang_qs", "employees"
   add_foreign_key "lang_qs", "langs"
   add_foreign_key "logs", "ads"

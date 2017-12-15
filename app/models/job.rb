@@ -22,13 +22,20 @@ class Job < ApplicationRecord
   has_many :job_langs, :dependent => :destroy
   has_many :langs, through: :job_langs
 
+  has_many :job_tags
+  has_many :tags, through: :job_tags
+
   has_many :logs, :dependent => :nullify
 
   before_save :check
   default_scope { order(updated_at: :desc) }
-  scope :by_job_type, -> job_type { where({job_type: job_type}) }
   scope :after_today, -> val { left_outer_joins(:periods).where("periods.id IS NULL OR periods.date >= ?", Date.today).distinct }
+  scope :by_job_type, -> job_type { where({job_type: job_type}) }
+  scope :filter, -> codes { joins(:tags).where(
+    codes.collect{|code| "tags.code = ''" + code + "''"}.join(" && ")
+  ).distinct}
   scope :offset_by, -> num { limit(30).offset(num) }
+  
 
   def check
     self.has_bonus = false if self.has_bonus.nil?
