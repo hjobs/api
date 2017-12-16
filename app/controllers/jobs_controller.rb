@@ -4,8 +4,8 @@ class JobsController < ApplicationController
 
   has_scope :after_today, allow_blank: true, default: true
   has_scope :by_job_type, allow_blank: true, default: "quick"
-  has_scope :filter, type: :array, allow_blank: true, default: nil do |controller, scope, value|
-    (value.present? && val.is_a?(Array) && !value.empty?) ? scope.filter(value) : scope
+  has_scope :filters, type: :array, allow_blank: true, default: nil do |controller, scope, value|
+    (value.present? && value.is_a?(Array) && !value.empty?) ? scope.filter(value) : scope
   end
   has_scope :offset_by, allow_blank: true, default: 0
 
@@ -50,7 +50,7 @@ class JobsController < ApplicationController
 
       @oj = OrgJob.new(:org => @current_user.org, :job => @job)
       
-      unless add_employment_types && set_locations && set_periods && set_langs && set_job_tags
+      unless add_employment_types && set_locations && set_periods && set_langs
         @job.destroy
         return
       end
@@ -68,8 +68,10 @@ class JobsController < ApplicationController
 
   # PATCH/PUT /jobs/1
   def update
-    if @job.update(job_params) && set_periods && set_langs && set_locations && set_job_tags
-      render json: @job
+    if @job.update(job_params)
+      if set_periods && set_langs && set_locations
+        render json: @job
+      end
     else
       render json: @job.errors, status: :unprocessable_entity
     end
@@ -94,7 +96,7 @@ class JobsController < ApplicationController
         :id, :title, :description, :deadline, :job_type, :event,
         :salary_type, :salary_value, :salary_high, :salary_low, :salary_unit,
         :position, :attachment_url, :employment_types, :periods,
-        :default_location, :has_bonus, :bonus_value, :photo
+        :default_location, :has_bonus, :bonus_value, :photo, :job_tags_attributes => [:id, :tag_id, :_destroy]
       )
     end
 
@@ -176,7 +178,8 @@ class JobsController < ApplicationController
     end
 
     def set_langs
-      job_lang_arr = []
+      current_job_langs = @job.langs
+      next_job_langs = []
       params[:job][:langs] ||= []
       params[:job][:langs].each do |lang|
         logger.debug lang
@@ -188,9 +191,9 @@ class JobsController < ApplicationController
         
         @job_lang = JobLang.find_or_initialize_by(:lang => @lang, :job => @job)
         if @job_lang.save
-          job_lang_arr << @job_lang
+          next_job_langs << @job_lang
         else
-          job_lang_arr.each do |job_lang| job_lang.destroy end
+          next_job_langs.each do |job_lang| job_lang.destroy end
           render json: @job_lang.errors, status: :unprocessable_entity
           return false
         end
@@ -198,23 +201,25 @@ class JobsController < ApplicationController
       return true
     end
 
-    def set_job_tags
-      logger.debug "inside set_job_tags"
-      params[:job][:tags] ||= []
-      params[:job][:tags].each do |t|
-        logger.debug "t = "
-        logger.debug t
-        tag = Tag.find_by(:code => t.code)
-        logger.debug "tag found with code = "
-        logger.debug tag.code
-        @job_tag = JobTag.find_or_initialize_by(:job => @job, :tag => @tag)
-        unless @job_tag.save
-          render json: @job_tag.errors, status: :unprocessable_entity
-          return false
-        end
-      end
-      return true
-    end
+    # def set_job_tags
+    #   logger.debug "inside set_job_tags"
+    #   params[:job][:tags] ||= []
+    #   params[:job][:tags].each do |t|
+    #     logger.debug "t.code = " + t[:code] + ", and t[:type] = " + t[:group]
+    #     tag = Tag.find_by(:code => t[:code])
+    #     logger.debug tag
+    #     if !tag
+    #       render json: {error: "Tag not found"}, status: :unprocessable_entity
+    #       return false
+    #     end
+    #     @job_tag = JobTag.find_or_initialize_by(:job => @job, :tag => tag)
+    #     unless @job_tag.save
+    #       render json: @job_tag.errors, status: :unprocessable_entity
+    #       return false
+    #     end
+    #   end
+    #   return true
+    # end
 
     def org_job_params
        params.require(:job).permit(:org_id)

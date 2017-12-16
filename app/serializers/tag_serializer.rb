@@ -1,4 +1,6 @@
 class TagSerializer < ActiveModel::Serializer
-  attributes  :type,
-              :code
+  attributes  :group,
+              :code,
+              :id,
+              :created_at
 end

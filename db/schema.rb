@@ -319,7 +319,7 @@ ActiveRecord::Schema.define(version: 20171214081336) do
 
   create_table "tags", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin" do |t|
     t.string   "code"
-    t.integer  "type"
+    t.integer  "group"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

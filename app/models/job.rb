@@ -22,7 +22,7 @@ class Job < ApplicationRecord
   has_many :job_langs, :dependent => :destroy
   has_many :langs, through: :job_langs
 
-  has_many :job_tags
+  has_many :job_tags, inverse_of: :job
   has_many :tags, through: :job_tags
 
   has_many :logs, :dependent => :nullify
@@ -32,10 +32,11 @@ class Job < ApplicationRecord
   scope :after_today, -> val { left_outer_joins(:periods).where("periods.id IS NULL OR periods.date >= ?", Date.today).distinct }
   scope :by_job_type, -> job_type { where({job_type: job_type}) }
   scope :filter, -> codes { joins(:tags).where(
-    codes.collect{|code| "tags.code = ''" + code + "''"}.join(" && ")
+    codes.collect{|code| "tags.code = '" + code + "'"}.join(" || ")
   ).distinct}
   scope :offset_by, -> num { limit(30).offset(num) }
   
+  accepts_nested_attributes_for :job_tags, allow_destroy: true
 
   def check
     self.has_bonus = false if self.has_bonus.nil?

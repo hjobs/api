@@ -14,7 +14,7 @@ class Employee < ApplicationRecord
 
   has_many :logs, dependent: :nullify
 
-  # accepts_nested_attributes_for :phones
+  accepts_nested_attributes_for :location
 
   validates :name, :email, :presence => true
 
