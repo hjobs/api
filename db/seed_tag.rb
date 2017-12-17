@@ -6,11 +6,14 @@ tag_arr = [
   {id: 1005, group: "industry", code: "clubmembers"},
   {id: 1006, group: "industry", code: "tourism"},
   {id: 1007, group: "industry", code: "academic"},
+  {id: 1999, group: "industry", code: "other"},
 
   {id: 3000, group: "commitment", code: "parttime"},
   {id: 3001, group: "commitment", code: "fulltime"},
   {id: 3002, group: "commitment", code: "casual"}, 
-  {id: 3003, group: "commitment", code: "freelance"}
+  {id: 3003, group: "commitment", code: "freelance"},
+  {id: 3004, group: "commitment", code: "volunteer"}
+
 ];
 
 
