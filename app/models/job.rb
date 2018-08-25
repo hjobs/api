@@ -22,7 +22,7 @@ class Job < ApplicationRecord
   has_many :job_langs, :dependent => :destroy
   has_many :langs, through: :job_langs
 
-  has_many :job_tags, inverse_of: :job
+  has_many :job_tags, inverse_of: :job, :dependent => :destroy
   has_many :tags, through: :job_tags
 
   has_many :logs, :dependent => :nullify
